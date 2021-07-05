@@ -6,9 +6,7 @@
 		"init": {
 			"factory": "./src/generators/init/generator",
 			"schema": "./src/generators/init/schema.json",
-			"description": "Initialize the @nxrs/cargo plugin",
-			"aliases": ["ng-add"],
-			"hidden": true
+			"description": "Initialize the @nxrs/cargo plugin"
 		},
 		"binary": {
 			"factory": "./src/generators/binary/generator",
@@ -21,6 +19,12 @@
 			"schema": "./src/generators/library/schema.json",
 			"description": "Create a Rust library",
 			"aliases": ["lib"]
+		},
+		"new": {
+			"factory": "./src/generators/new/generator",
+			"schema": "./src/generators/new/schema.json",
+			"description": "Run `cargo new ...` (for internal use)",
+			"hidden": true
 		}
 	}
 }
