@@ -1,5 +1,7 @@
-export interface CargoGeneratorSchema {
-	name: string;
-	tags?: string;
-	directory?: string;
+export default interface Options {
+	/**
+	 * The rustup toolchain channel for projects in this workspace
+	 * @default "stable"
+	 */
+	toolchain?: string;
 }

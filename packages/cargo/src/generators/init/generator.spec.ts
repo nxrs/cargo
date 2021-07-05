@@ -1,20 +1,38 @@
 import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
-import { Tree, readProjectConfiguration } from "@nrwl/devkit";
+import { Tree } from "@nrwl/devkit";
 
-import generator from "./generator";
-import { CargoGeneratorSchema } from "./schema";
+import runGenerator from "./generator";
 
 describe("cargo generator", () => {
 	let appTree: Tree;
-	const options: CargoGeneratorSchema = { name: "test" };
 
 	beforeEach(() => {
 		appTree = createTreeWithEmptyWorkspace();
 	});
 
 	it("should run successfully", async () => {
-		await generator(appTree, options);
-		const config = readProjectConfiguration(appTree, "test");
-		expect(config).toBeDefined();
+		await runGenerator(appTree, {});
+		let changes = appTree.listChanges();
+
+		let cargoToml = changes.find(c => c.path === "Cargo.toml");
+		let toolchainToml = changes.find(c => c.path === "rust-toolchain.toml");
+		let rustfmtToml = changes.find(c => c.path === "rustfmt.toml");
+
+		expect(cargoToml).toBeTruthy();
+		expect(toolchainToml).toBeTruthy();
+		expect(rustfmtToml).toBeTruthy();
+
+		let content = toolchainToml?.content!.toString();
+		expect(content).toContain(`channel = "stable"`);
+	});
+
+	it("should respect the 'toolchain' CLI option", async () => {
+		await runGenerator(appTree, { toolchain: "nightly" });
+		let toolchainToml = appTree
+			.listChanges()
+			.find(c => c.path === "rust-toolchain.toml")!
+			.content!.toString();
+
+		expect(toolchainToml).toContain(`channel = "nightly"`);
 	});
 });

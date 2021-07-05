@@ -1,68 +1,30 @@
-import {
-	addProjectConfiguration,
-	formatFiles,
-	generateFiles,
-	getWorkspaceLayout,
-	names,
-	offsetFromRoot,
-	Tree,
-} from "@nrwl/devkit";
+import { formatFiles, generateFiles, Tree } from "@nrwl/devkit";
 import * as path from "path";
-import { CargoGeneratorSchema } from "./schema";
 
-interface NormalizedSchema extends CargoGeneratorSchema {
-	projectName: string;
-	projectRoot: string;
-	projectDirectory: string;
-	parsedTags: string[];
+import CLIOptions from "./schema";
+
+interface Options extends CLIOptions {
+	toolchain: string;
 }
 
-function normalizeOptions(host: Tree, options: CargoGeneratorSchema): NormalizedSchema {
-	const name = names(options.name).fileName;
-	const projectDirectory = options.directory
-		? `${names(options.directory).fileName}/${name}`
-		: name;
-	const projectName = projectDirectory.replace(new RegExp("/", "g"), "-");
-	const projectRoot = `${getWorkspaceLayout(host).libsDir}/${projectDirectory}`;
-	const parsedTags = options.tags ? options.tags.split(",").map(s => s.trim()) : [];
+export default async function (host: Tree, opts: CLIOptions) {
+	let options = normalizeOptions(host, opts);
+	addFiles(host, options);
 
-	return {
-		...options,
-		projectName,
-		projectRoot,
-		projectDirectory,
-		parsedTags,
-	};
+	await formatFiles(host);
 }
 
-function addFiles(host: Tree, options: NormalizedSchema) {
-	const templateOptions = {
-		...options,
-		...names(options.name),
-		offsetFromRoot: offsetFromRoot(options.projectRoot),
+function normalizeOptions(_: Tree, options: CLIOptions): Options {
+	let toolchain = options.toolchain ?? "stable";
+
+	return { toolchain };
+}
+
+function addFiles(host: Tree, options: Options) {
+	let templateOptions = {
+		toolchain: options.toolchain,
 		template: "",
 	};
-	generateFiles(
-		host,
-		path.join(__dirname, "files"),
-		options.projectRoot,
-		templateOptions
-	);
-}
 
-export default async function (host: Tree, options: CargoGeneratorSchema) {
-	const normalizedOptions = normalizeOptions(host, options);
-	addProjectConfiguration(host, normalizedOptions.projectName, {
-		root: normalizedOptions.projectRoot,
-		projectType: "library",
-		sourceRoot: `${normalizedOptions.projectRoot}/src`,
-		targets: {
-			build: {
-				executor: "@nxrs/cargo:build",
-			},
-		},
-		tags: normalizedOptions.parsedTags,
-	});
-	addFiles(host, normalizedOptions);
-	await formatFiles(host);
+	generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
 }
