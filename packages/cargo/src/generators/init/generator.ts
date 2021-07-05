@@ -27,4 +27,9 @@ function addFiles(host: Tree, options: Options) {
 	};
 
 	generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
+
+	let gitignore = host.read(".gitignore")?.toString() ?? "";
+	gitignore += "/target";
+
+	host.write(".gitignore", gitignore);
 }
