@@ -6,7 +6,8 @@
 		"init": {
 			"factory": "./src/generators/init/generator",
 			"schema": "./src/generators/init/schema.json",
-			"description": "Initialize the @nxrs/cargo plugin"
+			"description": "Initialize the @nxrs/cargo plugin",
+			"hidden": true
 		},
 		"binary": {
 			"factory": "./src/generators/binary/generator",
