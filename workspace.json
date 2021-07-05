@@ -72,6 +72,7 @@
 			}
 		}
 	},
+	"defaultProject": "cargo",
 	"cli": {
 		"defaultCollection": "@nrwl/nx-plugin"
 	}
