@@ -1,0 +1,26 @@
+{
+	"$schema": "http://json-schema.org/schema",
+	"name": "cargo",
+	"version": "0.0.1",
+	"generators": {
+		"init": {
+			"factory": "./src/generators/init/generator",
+			"schema": "./src/generators/init/schema.json",
+			"description": "Initialize the @nxrs/cargo plugin",
+			"aliases": ["ng-add"],
+			"hidden": true
+		},
+		"binary": {
+			"factory": "./src/generators/binary/generator",
+			"schema": "./src/generators/binary/schema.json",
+			"description": "Create a Rust binary",
+			"aliases": ["bin", "app", "application"]
+		},
+		"library": {
+			"factory": "./src/generators/library/generator",
+			"schema": "./src/generators/library/schema.json",
+			"description": "Create a Rust library",
+			"aliases": ["lib"]
+		}
+	}
+}
