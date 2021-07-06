@@ -32,6 +32,9 @@ export default async function (host: Tree, opts: CLIOptions) {
 			build: {
 				executor: "@nxrs/cargo:build",
 			},
+			test: {
+				executor: "@nxts/cargo:test",
+			},
 		},
 		tags: options.parsedTags,
 	});
