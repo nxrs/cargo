@@ -40,7 +40,7 @@ export function parseArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
 	}
 
 	if (!ctx.projectName) {
-		throw new Error("Could not determine project to build");
+		throw new Error("Expected project name to be non-null");
 	}
 	if (ctx.targetName === "build") {
 		if (ctx.workspace.projects[ctx.projectName].projectType === "application") {

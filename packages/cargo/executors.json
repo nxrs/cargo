@@ -10,6 +10,11 @@
 			"implementation": "./src/executors/test/executor",
 			"schema": "./src/executors/test/schema.json",
 			"description": "Run unit tests"
+		},
+		"clippy": {
+			"implementation": "./src/executors/clippy/executor",
+			"schema": "./src/executors/clippy/schema.json",
+			"description": "Linter for Rust code"
 		}
 	}
 }

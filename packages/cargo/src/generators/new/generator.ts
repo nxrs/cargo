@@ -33,7 +33,10 @@ export default async function (host: Tree, opts: CLIOptions) {
 				executor: "@nxrs/cargo:build",
 			},
 			test: {
-				executor: "@nxts/cargo:test",
+				executor: "@nxrs/cargo:test",
+			},
+			lint: {
+				executor: "@nxrs/cargo:clippy",
 			},
 		},
 		tags: options.parsedTags,
