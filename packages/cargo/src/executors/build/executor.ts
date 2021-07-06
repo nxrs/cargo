@@ -3,7 +3,7 @@ import * as cp from "child_process";
 
 import CLIOptions from "./schema";
 
-export default async function runExecutor(opts: CLIOptions, ctx: ExecutorContext) {
+export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
 		let args = parseArgs(opts, ctx);
 		await cargoBuild(args, ctx);
@@ -12,7 +12,7 @@ export default async function runExecutor(opts: CLIOptions, ctx: ExecutorContext
 	} catch (err) {
 		return {
 			success: false,
-			reason: err.message,
+			reason: err?.message,
 		};
 	}
 }
