@@ -22,7 +22,6 @@ interface Options extends CLIOptions {
 
 export default async function (host: Tree, opts: CLIOptions) {
 	let options = normalizeOptions(host, opts);
-	console.log("options:", options);
 
 	addProjectConfiguration(host, options.projectName, {
 		root: options.projectRoot,
