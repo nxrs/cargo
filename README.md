@@ -1,5 +1,7 @@
 # @nxrs/cargo
 
+[![npm version](https://badge.fury.io/js/%40nxrs%2Fcargo.svg)](https://badge.fury.io/js/%40nxrs%2Fcargo)
+
 This is a WIP plugin for `@nrwl/nx` adding support for Rust applications and libraries.
 
 ## Generators
