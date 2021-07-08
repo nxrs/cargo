@@ -25,6 +25,10 @@ type CargoOptions = Partial<
 export function parseArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
 	let args = [] as string[];
 
+	if (opts.toolchain) {
+		args.push(`+${opts.toolchain}`);
+	}
+
 	// prettier-ignore
 	switch (ctx.targetName) {
 		case "build": args.push("build"); break;
@@ -65,7 +69,23 @@ export function parseArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
 	if (opts.release) args.push("--release");
 	if (opts.targetDir) args.push("--target-dir", opts.targetDir);
 	if (opts.outDir) {
-		args.push("+nightly", "-Z", "unstable-options", "--out-dir", opts.outDir);
+		if (args[0] !== "+nightly") {
+			if (args[0].startsWith("+")) {
+				let label = chalk.bold.yellowBright.inverse(" WARNING ");
+				let original = args[0].replace(/^\+/, "");
+				let message =
+					`'outDir' option can only be used with 'nightly' toolchain, ` +
+					`but toolchain '${original}' was already specified. ` +
+					`Overriding '${original}' => 'nightly'.`;
+
+				console.log(`${label} ${message}`);
+
+				args[0] = "+nightly";
+			} else {
+				args.unshift("+nightly");
+			}
+		}
+		args.push("-Z", "unstable-options", "--out-dir", opts.outDir);
 	}
 	if (opts.verbose) args.push("-v");
 	if (opts.veryVerbose) args.push("-vv");
@@ -74,7 +94,6 @@ export function parseArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
 	if (opts.locked) args.push("--locked");
 	if (opts.frozen) args.push("--frozen");
 	if (opts.offline) args.push("--offline");
-	if (opts.toolchain) args.push(`+${opts.toolchain}`);
 
 	return args;
 }
