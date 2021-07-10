@@ -8,7 +8,7 @@ import {
 
 describe("generate cargo:app", () => {
 	it("should create a new Rust application", async () => {
-		let app = uniq("cargo-");
+		let app = uniq("cargo");
 		ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 		await runNxCommandAsync(`generate @nxrs/cargo:app ${app}`);
@@ -20,7 +20,7 @@ describe("generate cargo:app", () => {
 
 	describe("--directory", () => {
 		it("should create src in the specified directory", async () => {
-			let app = uniq("cargo-");
+			let app = uniq("cargo");
 			ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 			await runNxCommandAsync(`generate @nxrs/cargo:app ${app} --directory subdir`);
@@ -33,7 +33,7 @@ describe("generate cargo:app", () => {
 
 	describe("--tags", () => {
 		it("should add tags to nx.json", async () => {
-			let app = uniq("cargo-");
+			let app = uniq("cargo");
 			ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 			await runNxCommandAsync(

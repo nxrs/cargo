@@ -14,6 +14,11 @@
 			},
 			"x-prompt": "What name would you like to use?"
 		},
+		"edition": {
+			"type": "number",
+			"description": "What Rust edition to use",
+			"default": 2018
+		},
 		"tags": {
 			"type": "string",
 			"description": "Add tags to the project (used for linting)",

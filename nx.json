@@ -1,7 +1,7 @@
 {
 	"npmScope": "nxrs",
 	"affected": {
-		"defaultBase": "master"
+		"defaultBase": "main"
 	},
 	"implicitDependencies": {
 		"package.json": {

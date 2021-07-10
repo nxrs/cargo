@@ -8,7 +8,7 @@ import {
 
 describe("generate cargo:lib", () => {
 	it("should create a new Rust library", async () => {
-		let lib = uniq("cargo-");
+		let lib = uniq("cargo");
 		ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 		await runNxCommandAsync(`generate @nxrs/cargo:lib ${lib}`);
@@ -20,7 +20,7 @@ describe("generate cargo:lib", () => {
 
 	describe("--directory", () => {
 		it("should create src in the specified directory", async () => {
-			let lib = uniq("cargo-");
+			let lib = uniq("cargo");
 			ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 			await runNxCommandAsync(`generate @nxrs/cargo:lib ${lib} --directory subdir`);
@@ -33,7 +33,7 @@ describe("generate cargo:lib", () => {
 
 	describe("--tags", () => {
 		it("should add tags to nx.json", async () => {
-			let lib = uniq("cargo-");
+			let lib = uniq("cargo");
 			ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
 			await runNxCommandAsync(

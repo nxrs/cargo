@@ -3,7 +3,7 @@ import { Tree } from "@nrwl/devkit";
 
 import runGenerator from "./generator";
 
-describe("cargo generator", () => {
+describe("init generator", () => {
 	let appTree: Tree;
 
 	beforeEach(() => {

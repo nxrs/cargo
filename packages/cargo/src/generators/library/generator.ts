@@ -1,11 +1,69 @@
-import { Tree } from "@nrwl/devkit";
+import {
+	addProjectConfiguration,
+	formatFiles,
+	generateFiles,
+	Tree,
+} from "@nrwl/devkit";
+import * as path from "path";
 
-import cargoNew from "../new/generator";
+import {
+	GeneratorOptions,
+	normalizeGeneratorOptions,
+	updateWorkspaceMembers,
+} from "../../common";
+import cargoInit from "../init/generator";
 import CLIOptions from "./schema";
 
+// prettier-ignore
+type Options = CLIOptions & GeneratorOptions;
+
 export default async function (host: Tree, opts: CLIOptions) {
-	await cargoNew(host, {
-		...opts,
+	let options = normalizeGeneratorOptions("library", host, opts);
+
+	addProjectConfiguration(host, options.projectName, {
+		root: options.projectRoot,
 		projectType: "library",
+		sourceRoot: `${options.projectRoot}/src`,
+		targets: {
+			build: {
+				executor: "@nxrs/cargo:build",
+				options: {},
+				configurations: {
+					production: {
+						release: true,
+					},
+				},
+			},
+			test: {
+				executor: "@nxrs/cargo:test",
+			},
+			lint: {
+				executor: "@nxrs/cargo:clippy",
+			},
+		},
+		tags: options.parsedTags,
 	});
+
+	await addFiles(host, options);
+	updateWorkspaceMembers(host, options);
+	await formatFiles(host);
+}
+
+async function addFiles(host: Tree, opts: Options) {
+	if (!host.exists("Cargo.toml")) {
+		await cargoInit(host, {});
+	}
+
+	let substitutions = {
+		projectName: opts.projectName,
+		edition: opts.edition,
+		template: "",
+	};
+
+	generateFiles(
+		host,
+		path.join(__dirname, "files"),
+		opts.projectRoot,
+		substitutions
+	);
 }

@@ -8,8 +8,8 @@ import {
 
 describe("generate cargo:lib && generate cargo:app", () => {
 	it("should generate two projects in the same workspace", async () => {
-		let app = uniq("app-");
-		let lib = uniq("lib-");
+		let app = uniq("app");
+		let lib = uniq("lib");
 
 		ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 

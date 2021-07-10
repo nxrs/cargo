@@ -1,5 +1,6 @@
 export default interface Options {
 	name: string;
-	tags?: string;
+	edition?: number;
 	directory?: string;
+	tags?: string;
 }

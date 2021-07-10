@@ -20,12 +20,6 @@
 			"schema": "./src/generators/library/schema.json",
 			"description": "Create a Rust library",
 			"aliases": ["lib"]
-		},
-		"new": {
-			"factory": "./src/generators/new/generator",
-			"schema": "./src/generators/new/schema.json",
-			"description": "Run `cargo new ...` (for internal use)",
-			"hidden": true
 		}
 	}
 }
