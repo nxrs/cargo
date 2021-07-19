@@ -141,12 +141,11 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 	if (!ctx.projectName) {
 		throw new Error("Expected project name to be non-null");
 	}
-	if (ctx.targetName === "build") {
-		if (ctx.workspace.projects[ctx.projectName].projectType === "application") {
-			args.push("--bin");
-		} else {
-			args.push("--lib");
-		}
+	if (
+		ctx.targetName === "build" &&
+		ctx.workspace.projects[ctx.projectName].projectType === "application"
+	) {
+		args.push("--bin");
 	} else {
 		args.push("-p");
 	}
