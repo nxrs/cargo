@@ -3,6 +3,18 @@ import * as path from "path";
 
 import CLIOptions from "./schema";
 
+// Next release:
+//   TODO: Add `buildable` and `publishable` options to `lib` generator
+//   TODO: Update `lib` generator to *not* add `build` target to workspace.json unless
+//         `buildable` is true
+//   FIXME: Try to avoid nx auto-running the executors for buildable deps when their
+//          dependents are built, since cargo already does this (may be blocked upstream)
+//   TODO: Update init generator to add "@nxrs/cargo" to nx.json > plugins
+//
+// Longer term:
+//   TODO: Add `format` executor via rustfmt
+//   TODO: Add `benchmark` generator/executor via Criterion
+
 interface Options extends CLIOptions {
 	toolchain: string;
 }
