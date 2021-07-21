@@ -27,9 +27,15 @@ export default async function (host: Tree, opts: CLIOptions) {
 		targets: {
 			test: {
 				executor: "@nxrs/cargo:test",
+				options: {},
 			},
 			lint: {
 				executor: "@nxrs/cargo:clippy",
+				options: {
+					fix: false,
+					failOnWarnings: true,
+					noDeps: true,
+				},
 			},
 		},
 		tags: options.parsedTags,
