@@ -25,15 +25,6 @@ export default async function (host: Tree, opts: CLIOptions) {
 		projectType: "library",
 		sourceRoot: `${options.projectRoot}/src`,
 		targets: {
-			build: {
-				executor: "@nxrs/cargo:build",
-				options: {},
-				configurations: {
-					production: {
-						release: true,
-					},
-				},
-			},
 			test: {
 				executor: "@nxrs/cargo:test",
 			},
