@@ -35,4 +35,15 @@ describe("init generator", () => {
 
 		expect(toolchainToml).toContain(`channel = "nightly"`);
 	});
+
+	it("should add the graph plugin to nx.json plugins", async () => {
+		await runGenerator(appTree, {});
+		let changes = appTree.listChanges();
+
+		let nxJson = changes.find(c => c.path === "nx.json");
+		expect(nxJson).toBeTruthy();
+
+		let json = JSON.parse(nxJson!.content!.toString());
+		expect(json.plugins).toContain("@nxrs/cargo");
+	});
 });

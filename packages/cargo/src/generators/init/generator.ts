@@ -1,19 +1,17 @@
-import { formatFiles, generateFiles, Tree } from "@nrwl/devkit";
+import {
+	formatFiles,
+	generateFiles,
+	readWorkspaceConfiguration,
+	Tree,
+	updateWorkspaceConfiguration,
+} from "@nrwl/devkit";
 import * as path from "path";
 
 import CLIOptions from "./schema";
 
-// Next release:
-//   TODO: Add `buildable` and `publishable` options to `lib` generator
-//   TODO: Update `lib` generator to *not* add `build` target to workspace.json unless
-//         `buildable` is true
-//   FIXME: Try to avoid nx auto-running the executors for buildable deps when their
-//          dependents are built, since cargo already does this (may be blocked upstream)
-//   TODO: Update init generator to add "@nxrs/cargo" to nx.json > plugins
-//
-// Longer term:
-//   TODO: Add `format` executor via rustfmt
-//   TODO: Add `benchmark` generator/executor via Criterion
+// TODO: Add `buildable` option to `library` generator
+// TODO: Add `format` executor via rustfmt
+// TODO: Add `benchmark` generator/executor via Criterion
 
 interface Options extends CLIOptions {
 	toolchain: string;
@@ -22,6 +20,7 @@ interface Options extends CLIOptions {
 export default async function (host: Tree, opts: CLIOptions) {
 	let options = normalizeOptions(host, opts);
 	addFiles(host, options);
+	addPlugin(host, options);
 
 	await formatFiles(host);
 }
@@ -44,4 +43,13 @@ function addFiles(host: Tree, options: Options) {
 	gitignore += "/target";
 
 	host.write(".gitignore", gitignore);
+}
+
+function addPlugin(host: Tree, _: Options) {
+	let config = readWorkspaceConfiguration(host);
+	let plugins = config.plugins
+		? config.plugins.concat("@nxrs/cargo")
+		: ["@nxrs/cargo"];
+
+	updateWorkspaceConfiguration(host, { ...config, plugins });
 }
