@@ -1,10 +1,5 @@
-import {
-	formatFiles,
-	generateFiles,
-	readWorkspaceConfiguration,
-	Tree,
-	updateWorkspaceConfiguration,
-} from "@nrwl/devkit";
+import * as nrwl from "@nrwl/devkit";
+import { Tree } from "@nrwl/devkit";
 import * as path from "path";
 
 import CLIOptions from "./schema";
@@ -22,7 +17,7 @@ export default async function (host: Tree, opts: CLIOptions) {
 	addFiles(host, options);
 	addPlugin(host, options);
 
-	await formatFiles(host);
+	await nrwl.formatFiles(host);
 }
 
 function normalizeOptions(_: Tree, options: CLIOptions): Options {
@@ -37,7 +32,7 @@ function addFiles(host: Tree, options: Options) {
 		template: "",
 	};
 
-	generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
+	nrwl.generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
 
 	let gitignore = host.read(".gitignore")?.toString() ?? "";
 	gitignore += "/target";
@@ -46,10 +41,10 @@ function addFiles(host: Tree, options: Options) {
 }
 
 function addPlugin(host: Tree, _: Options) {
-	let config = readWorkspaceConfiguration(host);
+	let config = nrwl.readWorkspaceConfiguration(host);
 	let plugins = config.plugins
 		? config.plugins.concat("@nxrs/cargo")
 		: ["@nxrs/cargo"];
 
-	updateWorkspaceConfiguration(host, { ...config, plugins });
+	nrwl.updateWorkspaceConfiguration(host, { ...config, plugins });
 }

@@ -1,9 +1,5 @@
-import {
-	addProjectConfiguration,
-	formatFiles,
-	generateFiles,
-	Tree,
-} from "@nrwl/devkit";
+import * as nrwl from "@nrwl/devkit";
+import { Tree } from "@nrwl/devkit";
 import * as path from "path";
 
 import {
@@ -20,7 +16,7 @@ type Options = CLIOptions & GeneratorOptions;
 export default async function (host: Tree, opts: CLIOptions) {
 	let options = normalizeGeneratorOptions("application", host, opts);
 
-	addProjectConfiguration(host, options.projectName, {
+	nrwl.addProjectConfiguration(host, options.projectName, {
 		root: options.projectRoot,
 		projectType: "application",
 		sourceRoot: `${options.projectRoot}/src`,
@@ -54,7 +50,7 @@ export default async function (host: Tree, opts: CLIOptions) {
 
 	await addFiles(host, options);
 	updateWorkspaceMembers(host, options);
-	await formatFiles(host);
+	await nrwl.formatFiles(host);
 }
 
 async function addFiles(host: Tree, opts: Options) {
@@ -68,7 +64,7 @@ async function addFiles(host: Tree, opts: Options) {
 		template: "",
 	};
 
-	generateFiles(
+	nrwl.generateFiles(
 		host,
 		path.join(__dirname, "files"),
 		opts.projectRoot,
