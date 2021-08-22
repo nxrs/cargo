@@ -13,5 +13,9 @@
 		"name": "Danny McGee",
 		"email": "dannymcgee@gmail.com",
 		"url": "https://github.com/dannymcgee"
+	},
+	"dependencies": {
+		"@nrwl/devkit": "12.7.2",
+		"chalk": "^4.1.2"
 	}
 }
