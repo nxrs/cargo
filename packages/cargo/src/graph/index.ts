@@ -1,5 +1,4 @@
 import {
-	DependencyType,
 	ProjectGraph,
 	ProjectGraphBuilder,
 	ProjectGraphProcessorContext,
@@ -36,9 +35,9 @@ export function processProjectGraph(
 					});
 				}
 
-				builder.addDependency(DependencyType.static, pkg.name, depName);
+				builder.addImplicitDependency(pkg.name, depName);
 			});
 		});
 
-	return builder.getProjectGraph();
+	return builder.getUpdatedProjectGraph();
 }
