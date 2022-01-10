@@ -10,7 +10,8 @@
 					"executor": "@nrwl/linter:eslint",
 					"options": {
 						"lintFilePatterns": ["packages/cargo/**/*.ts"]
-					}
+					},
+					"outputs": ["{options.outputFile}"]
 				},
 				"test": {
 					"executor": "@nrwl/jest:jest",
@@ -53,7 +54,8 @@
 						]
 					}
 				}
-			}
+			},
+			"tags": []
 		},
 		"cargo-e2e": {
 			"root": "e2e\\cargo-e2e",
@@ -69,11 +71,9 @@
 						"jestConfig": "e2e/cargo-e2e/jest.config.js"
 					}
 				}
-			}
+			},
+			"tags": [],
+			"implicitDependencies": ["cargo"]
 		}
-	},
-	"defaultProject": "cargo",
-	"cli": {
-		"defaultCollection": "@nrwl/nx-plugin"
 	}
 }

@@ -1,30 +1,24 @@
-import {
-	checkFilesExist,
-	ensureNxProject,
-	readFile,
-	runNxCommandAsync,
-	uniq,
-} from "@nrwl/nx-plugin/testing";
+import * as nrwl from "@nrwl/nx-plugin/testing";
 
 describe("generate cargo:lib && generate cargo:app", () => {
 	it("should generate two projects in the same workspace", async () => {
-		let app = uniq("app");
-		let lib = uniq("lib");
+		let app = nrwl.uniq("app");
+		let lib = nrwl.uniq("lib");
 
-		ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
+		nrwl.ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
 
-		await runNxCommandAsync(`generate @nxrs/cargo:lib ${lib}`);
-		await runNxCommandAsync(`generate @nxrs/cargo:app ${app}`);
+		await nrwl.runNxCommandAsync(`generate @nxrs/cargo:lib ${lib}`);
+		await nrwl.runNxCommandAsync(`generate @nxrs/cargo:app ${app}`);
 
 		expect(() => {
-			checkFilesExist(`libs/${lib}/src/lib.rs`);
+			nrwl.checkFilesExist(`libs/${lib}/src/lib.rs`);
 		}).not.toThrow();
 
 		expect(() => {
-			checkFilesExist(`apps/${app}/src/main.rs`);
+			nrwl.checkFilesExist(`apps/${app}/src/main.rs`);
 		}).not.toThrow();
 
-		let cargoToml = readFile("Cargo.toml").replace(/\s+/g, "");
+		let cargoToml = nrwl.readFile("Cargo.toml").replace(/\s+/g, "");
 
 		expect(cargoToml).toMatch(`[workspace]members=["apps/${app}","libs/${lib}"]`);
 	}, 120000);

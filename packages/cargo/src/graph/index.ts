@@ -39,7 +39,7 @@ export function processProjectGraph(
 
 					builder.addNode({
 						name: depName,
-						type: "cargo",
+						type: "cargo" as any,
 						data: {
 							version: depPkg.version,
 							packageName: depPkg.name,
