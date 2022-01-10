@@ -17,7 +17,7 @@
 		"edition": {
 			"type": "number",
 			"description": "What Rust edition to use",
-			"default": 2018
+			"default": 2021
 		},
 		"tags": {
 			"type": "string",

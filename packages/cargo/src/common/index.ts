@@ -75,7 +75,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 
 	let projectRoot = `${rootDir}/${projectDirectory}`;
 	let parsedTags = opts.tags?.split(",").map(s => s.trim()) ?? [];
-	let edition = opts.edition ?? 2018;
+	let edition = opts.edition ?? 2021;
 
 	return {
 		...opts,
