@@ -4,6 +4,8 @@ import {
 	ProjectGraphProcessorContext,
 } from "@nrwl/devkit";
 import * as cp from "child_process";
+import * as util from "util";
+import * as chalk from "chalk";
 
 export function processProjectGraph(
 	graph: ProjectGraph,
@@ -23,7 +25,18 @@ export function processProjectGraph(
 				let depName = dep.source == null ? dep.name : `cargo:${dep.name}`;
 
 				if (!Object.keys(graph.nodes).includes(depName)) {
-					let depPkg = packages.find(pkg => pkg.source === dep.source);
+					let depPkg = packages.find(pkg => pkg.source.startsWith(dep.source));
+					if (!depPkg) {
+						console.log(
+							`${chalk.yellowBright.bold.inverse(
+								" WARN "
+							)} Failed to find package for dependency:`
+						);
+						console.log(util.inspect(dep));
+
+						return;
+					}
+
 					builder.addNode({
 						name: depName,
 						type: "cargo",
