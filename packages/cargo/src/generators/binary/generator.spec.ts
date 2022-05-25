@@ -26,7 +26,7 @@ describe("binary generator", () => {
 			.content!.toString();
 
 		expect(cargoContent).toContain(`name = "my_app"`);
-		expect(cargoContent).toContain(`edition = "2018"`);
+		expect(cargoContent).toContain(`edition = "2021"`);
 	});
 
 	it("should add project to workspace members", () => {
