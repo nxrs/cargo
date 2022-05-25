@@ -26,7 +26,7 @@ describe("library generator", () => {
 			.content!.toString();
 
 		expect(cargoContent).toContain(`name = "my_library"`);
-		expect(cargoContent).toContain(`edition = "2018"`);
+		expect(cargoContent).toContain(`edition = "2021"`);
 
 		let libRsContent = changes
 			.find(c => c.path === "libs/my-library/src/lib.rs")!
