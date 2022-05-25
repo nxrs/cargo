@@ -20,7 +20,7 @@ export interface GeneratorOptions {
 }
 
 // prettier-ignore
-type CargoOptions = Partial<
+export type CargoOptions = Partial<
 	& FeatureSelection
 	& CompilationOptions
 	& OutputOptions
@@ -160,6 +160,7 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 	}
 
 	if (opts.noDefaultFeatures) args.push("--no-default-features");
+	if (opts.target) args.push("--target", opts.target);
 	if (opts.release) args.push("--release");
 	if (opts.targetDir) args.push("--target-dir", opts.targetDir);
 	if (opts.outDir) {
