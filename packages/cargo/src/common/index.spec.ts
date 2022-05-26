@@ -1,5 +1,6 @@
-import { ExecutorContext } from "@nrwl/devkit";
-import { CargoOptions, parseCargoArgs } from ".";
+import { ExecutorContext, Tree } from "@nrwl/devkit";
+import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
+import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs } from ".";
 
 describe("common utils", () => {
 	describe("parseCargoArgs", () => {
@@ -14,6 +15,34 @@ describe("common utils", () => {
 			expect(args.join(" ")).toEqual(
 				"cargo build --bin test-app --target 86_64-pc-windows-gnu"
 			);
+		});
+	});
+
+	describe("normalizeGeneratorOptions", () => {
+		let appTree: Tree;
+
+		beforeAll(() => {
+			appTree = createTreeWithEmptyWorkspace();
+		});
+
+		it("should respect kebab-case project names", () => {
+			let opts = normalizeGeneratorOptions("application", appTree, { name: "my-app" });
+			expect(opts.projectName).toBe("my-app");
+		});
+
+		it("should respect snake_case project names", () => {
+			let opts = normalizeGeneratorOptions("application", appTree, { name: "my_app" });
+			expect(opts.projectName).toBe("my_app");
+		});
+
+		it("should respect PascalCase project names", () => {
+			let opts = normalizeGeneratorOptions("application", appTree, { name: "MyApp" });
+			expect(opts.projectName).toBe("MyApp");
+		});
+
+		it("should respect camelCase project names (you monster)", () => {
+			let opts = normalizeGeneratorOptions("application", appTree, { name: "myApp" });
+			expect(opts.projectName).toBe("myApp");
 		});
 	});
 });
