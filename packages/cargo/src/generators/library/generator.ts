@@ -49,6 +49,7 @@ async function addFiles(host: Tree, opts: Options) {
 
 	let substitutions = {
 		projectName: opts.projectName,
+		moduleName: opts.moduleName,
 		edition: opts.edition,
 		template: "",
 	};

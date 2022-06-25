@@ -13,6 +13,7 @@ import {
 
 export interface GeneratorOptions {
 	projectName: string;
+	moduleName: string;
 	projectRoot: string;
 	projectDirectory: string;
 	parsedTags: string[];
@@ -61,8 +62,17 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 ): T & GeneratorOptions {
 	let layout = nrwl.getWorkspaceLayout(host);
 	let names = cargoNames(opts.name);
-	let fileName = names.fileName;
-	let projectName = names.snakeName;
+	// let fileName = names.fileName;
+	let moduleName = names.snakeName;
+
+	// Only convert project/file name casing if it's invalid
+	let projectName = /^[-_a-zA-Z0-9]+$/.test(opts.name)
+		? opts.name
+		: names.snakeName;
+
+	let fileName = /^[-_a-zA-Z0-9]+$/.test(opts.name)
+		? opts.name
+		: names.fileName;
 
 	let rootDir = {
 		application: layout.appsDir,
@@ -80,6 +90,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	return {
 		...opts,
 		projectName,
+		moduleName,
 		projectRoot,
 		projectDirectory,
 		parsedTags,
