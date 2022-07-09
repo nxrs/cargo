@@ -139,7 +139,7 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 	switch (ctx.targetName) {
 		case "build": args.push("build"); break;
 		case "test":  args.push("test");  break;
-
+		case "run": args.push("run"); break;
 		default: {
 			if (ctx.targetName == null) {
 				throw new Error("Expected target name to be non-null");
