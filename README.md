@@ -35,5 +35,5 @@ This is a WIP plugin for `@nrwl/nx` adding support for Rust applications and lib
 The executors accept most of the same CLI args as the corresponding `cargo` commands. When in doubt, run with the `--help` flag to see all options with descriptions:
 
 ```sh
-> nx build my-rust-app --help
+> nx build my_rust_app --help
 ```
