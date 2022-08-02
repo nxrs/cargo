@@ -15,7 +15,9 @@
 		"url": "https://github.com/dannymcgee"
 	},
 	"dependencies": {
-		"chalk": "^4.1.2"
+		"chalk": "^4.1.2",
+		"stream-chain": "^2.2.5",
+		"stream-json": "^1.7.4"
 	},
 	"peerDependencies": {
 		"@nrwl/devkit": ">= 12.7.0"

@@ -27,8 +27,6 @@
 	},
 	"private": true,
 	"dependencies": {
-		"stream-chain": "^2.2.5",
-		"stream-json": "^1.7.4",
 		"tslib": "^2.0.0"
 	},
 	"devDependencies": {
