@@ -18,6 +18,11 @@ export interface CompilationOptions {
 	 * documentation for more details.
 	 */
 	target?: string;
+
+	/**
+	 * A crate can contain multiple bin targets, if provided and the project is an application this will be used as the bin target.
+	 */
+	bin?: string;
 	/**
 	 * Build optimized artifacts with the `release` profile. See the [PROFILES](https://doc.rust-lang.org/cargo/commands/cargo-build.html#profiles)
 	 * section for details on how this affects profile selection.

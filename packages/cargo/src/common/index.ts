@@ -138,7 +138,7 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 	// prettier-ignore
 	switch (ctx.targetName) {
 		case "build": args.push("build"); break;
-		case "test":  args.push("test");  break;
+		case "test": args.push("test"); break;
 		case "run": args.push("run"); break;
 		default: {
 			if (ctx.targetName == null) {
@@ -157,10 +157,11 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 		ctx.workspace.projects[ctx.projectName].projectType === "application"
 	) {
 		args.push("--bin");
+		args.push(opts.bin || ctx.projectName);
 	} else {
 		args.push("-p");
+		args.push(ctx.projectName);
 	}
-	args.push(ctx.projectName);
 
 	if (opts.features) {
 		if (opts.features === "all") {
