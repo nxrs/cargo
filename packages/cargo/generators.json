@@ -20,6 +20,12 @@
 			"schema": "./src/generators/library/schema.json",
 			"description": "Create a Rust library",
 			"aliases": ["lib"]
-		}
+		},
+    "wasm": {
+      "factory": "./src/generators/wasm/generator",
+      "schema": "./src/generators/wasm/schema.json",
+      "description": "Create a Rust Wasm library",
+      "aliases": ["wasm"]
+    }
 	}
 }
