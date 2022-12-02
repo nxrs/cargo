@@ -11,7 +11,7 @@ describe("wasm generator", () => {
 
 	describe("with kebab-case project name", () => {
 		beforeAll(async () => {
-			await runGenerator(appTree, { name: "my-library" });
+			await runGenerator(appTree, { name: "my-library", outDirName: "pkg" });
 		});
 
 		it("should create the correct file structure", () => {
@@ -62,7 +62,7 @@ describe("wasm generator", () => {
 	describe("with snake_case project name", () => {
 		beforeAll(async () => {
 			appTree = createTreeWithEmptyV1Workspace();
-			await runGenerator(appTree, { name: "my_library" });
+			await runGenerator(appTree, { name: "my_library", outDirName: "pkg" });
 		});
 
 		it("should create the correct file structure", () => {

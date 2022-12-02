@@ -1,5 +1,10 @@
 import * as nrwl from "@nrwl/devkit";
-import { Tree } from "@nrwl/devkit";
+import {
+	generateFiles,
+	getImportPath,
+	getWorkspaceLayout,
+	Tree,
+} from "@nrwl/devkit";
 import * as path from "path";
 
 import {
@@ -14,7 +19,7 @@ import CLIOptions from "./schema";
 type Options = CLIOptions & GeneratorOptions;
 
 export default async function (host: Tree, opts: CLIOptions) {
-	let options = normalizeGeneratorOptions("library", host, opts);
+	let options = normalizeGeneratorOptions<CLIOptions>("library", host, opts);
 
 	nrwl.addProjectConfiguration(host, options.projectName, {
 		root: options.projectRoot,
@@ -51,6 +56,7 @@ export default async function (host: Tree, opts: CLIOptions) {
 
 	await addFiles(host, options);
 	updateWorkspaceMembers(host, options);
+	updateTsConfigPaths(host, options);
 	await nrwl.formatFiles(host);
 }
 
@@ -72,4 +78,21 @@ async function addFiles(host: Tree, opts: Options) {
 		opts.projectRoot,
 		substitutions
 	);
+}
+
+function updateTsConfigPaths(host: Tree, opts: CLIOptions & GeneratorOptions) {
+	let { npmScope } = getWorkspaceLayout(host);
+	let importPath = getImportPath(npmScope, opts.projectDirectory);
+
+	let tsConfigBase = JSON.parse(host.read("tsconfig.base.json")!.toString());
+
+	tsConfigBase.compilerOptions.paths[importPath] = [
+		`${opts.projectRoot}/${opts.outDirName}`,
+	];
+
+	tsConfigBase.compilerOptions.paths[`${importPath}/*`] = [
+		`${opts.projectRoot}/${opts.outDirName}/*`,
+	];
+
+	host.write("tsconfig.base.json", JSON.stringify(tsConfigBase));
 }

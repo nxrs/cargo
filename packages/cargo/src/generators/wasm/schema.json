@@ -19,6 +19,12 @@
 			"description": "What Rust edition to use",
 			"default": 2021
 		},
+    "outDirName": {
+      "type": "string",
+      "description": "A directory where the wasm output will be generated",
+      "alias": "d",
+      "default": "pkg"
+    },
 		"tags": {
 			"type": "string",
 			"description": "Add tags to the project (used for linting)",

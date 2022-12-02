@@ -52,7 +52,7 @@ function runWasmPack(args: string[], ctx: ExecutorContext) {
 
 	return new Promise<void>((resolve, reject) => {
 		spawn("wasm-pack", args, {
-			cwd: ctx.cwd,
+			cwd: ctx.workspace.projects[ctx.projectName as string].root,
 			shell: true,
 			stdio: "inherit",
 		})
