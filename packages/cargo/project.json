@@ -1,5 +1,5 @@
 {
-	"root": "packages/cargo",
+	"name": "cargo",
 	"sourceRoot": "packages/cargo/src",
 	"projectType": "library",
 	"targets": {
@@ -14,12 +14,12 @@
 			"executor": "@nrwl/jest:jest",
 			"outputs": ["coverage/packages/cargo"],
 			"options": {
-				"jestConfig": "packages/cargo/jest.config.js",
+				"jestConfig": "packages/cargo/jest.config.ts",
 				"passWithNoTests": true
 			}
 		},
 		"build": {
-			"executor": "@nrwl/node:package",
+			"executor": "@nrwl/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/packages/cargo",

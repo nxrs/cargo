@@ -1,12 +1,12 @@
 import { Tree } from "@nrwl/devkit";
-import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
+import { createTreeWithEmptyV1Workspace } from "@nrwl/devkit/testing";
 import runGenerator from "./generator";
 
 describe("library generator", () => {
 	let appTree: Tree;
 
 	beforeAll(() => {
-		appTree = createTreeWithEmptyWorkspace();
+		appTree = createTreeWithEmptyV1Workspace();
 	});
 
 	describe("with kebab-case project name", () => {
@@ -53,7 +53,7 @@ describe("library generator", () => {
 
 	describe("with snake_case project name", () => {
 		beforeAll(async () => {
-			appTree = createTreeWithEmptyWorkspace();
+			appTree = createTreeWithEmptyV1Workspace();
 			await runGenerator(appTree, { name: "my_library" });
 		});
 

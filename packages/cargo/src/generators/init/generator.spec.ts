@@ -1,4 +1,4 @@
-import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
+import { createTreeWithEmptyV1Workspace } from "@nrwl/devkit/testing";
 import { Tree } from "@nrwl/devkit";
 
 import runGenerator from "./generator";
@@ -7,7 +7,7 @@ describe("init generator", () => {
 	let appTree: Tree;
 
 	beforeEach(() => {
-		appTree = createTreeWithEmptyWorkspace();
+		appTree = createTreeWithEmptyV1Workspace();
 	});
 
 	it("should run successfully", async () => {
