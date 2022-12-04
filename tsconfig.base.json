@@ -16,7 +16,7 @@
 		"baseUrl": ".",
 		"strictNullChecks": true,
 		"paths": {
-			"nxrs/cargo": ["packages/cargo/src/index.ts"]
+			"@noctifer20/nx-cargo": ["packages/nx-cargo/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

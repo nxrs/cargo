@@ -1,14 +1,7 @@
 {
-	"npmScope": "nxrs",
+	"npmScope": "noctifer20",
 	"affected": {
 		"defaultBase": "main"
-	},
-	"implicitDependencies": {
-		"package.json": {
-			"dependencies": "*",
-			"devDependencies": "*"
-		},
-		".eslintrc.json": "*"
 	},
 	"tasksRunnerOptions": {
 		"default": {
@@ -19,28 +12,22 @@
 			}
 		}
 	},
-	"targetDependencies": {
-		"build": [
-			{
-				"target": "build",
-				"projects": "dependencies"
-			}
-		]
-	},
 	"workspaceLayout": {
 		"appsDir": "e2e",
 		"libsDir": "packages"
 	},
-	"cli": {
-		"defaultCollection": "@nrwl/nx-plugin"
-	},
-	"defaultProject": "cargo",
+	"defaultProject": "nx-cargo",
 	"targetDefaults": {
-		"test": {
-			"inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
-		},
-		"lint": {
-			"inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["production", "^production"]
 		}
-	}
+	},
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"namedInputs": {
+		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"sharedGlobals": [],
+		"production": ["default"]
+	},
+	"plugins": ["@noctifer20/nx-cargo"]
 }

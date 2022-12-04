@@ -1,7 +1,8 @@
 {
-  "version": 2,
-  "projects": {
-    "cargo": "packages/cargo",
-    "cargo-e2e": "e2e/cargo-e2e"
-  }
+	"version": 2,
+	"projects": {
+		"nx-cargo": "packages/nx-cargo",
+		"nx-cargo-e2e": "e2e/nx-cargo-e2e"
+	},
+	"$schema": "./node_modules/nx/schemas/workspace-schema.json"
 }

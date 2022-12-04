@@ -1,8 +1,6 @@
-# nx-cargo
+# @noctifer20/nx-cargo
 
-Fork of [`@nxrs/cargo`](https://github.com/nxrs/cargo) with [`wasm-pack`](https://rustwasm.github.io/wasm-pack/) support
-
-[![npm version](https://badge.fury.io/js/nx-cargo.svg)](https://badge.fury.io/js/%40nxrs%2Fcargo)
+Fork of [`@nxrs/cargo`](https://github.com/nxrs/cargo) with [wasm-pack](https://rustwasm.github.io/wasm-pack/) support
 
 ## Generators
 

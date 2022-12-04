@@ -1,3 +1,3 @@
 export default {
-	projects: ["<rootDir>/packages/cargo", "<rootDir>/e2e/cargo-e2e"],
+	projects: ["<rootDir>/packages/nx-cargo", "<rootDir>/e2e/nx-cargo-e2e"],
 };

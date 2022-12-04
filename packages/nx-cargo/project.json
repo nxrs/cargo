@@ -1,0 +1,56 @@
+{
+	"name": "nx-cargo",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/nx-cargo/src",
+	"projectType": "library",
+	"targets": {
+		"lint": {
+			"executor": "@nrwl/linter:eslint",
+			"options": {
+				"lintFilePatterns": ["packages/nx-cargo/**/*.ts"]
+			},
+			"outputs": ["{options.outputFile}"]
+		},
+		"test": {
+			"executor": "@nrwl/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/packages/nx-cargo"],
+			"options": {
+				"jestConfig": "packages/nx-cargo/jest.config.ts"
+			}
+		},
+		"build": {
+			"executor": "@nrwl/js:tsc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/packages/nx-cargo",
+				"tsConfig": "packages/nx-cargo/tsconfig.lib.json",
+				"packageJson": "packages/nx-cargo/package.json",
+				"main": "packages/nx-cargo/src/index.ts",
+				"assets": [
+					"packages/nx-cargo/*.md",
+					{
+						"input": "./packages/nx-cargo/src",
+						"glob": "**/!(*.ts)",
+						"output": "./src"
+					},
+					{
+						"input": "./packages/nx-cargo/src",
+						"glob": "**/*.d.ts",
+						"output": "./src"
+					},
+					{
+						"input": "./packages/nx-cargo",
+						"glob": "generators.json",
+						"output": "."
+					},
+					{
+						"input": "./packages/nx-cargo",
+						"glob": "executors.json",
+						"output": "."
+					}
+				]
+			}
+		}
+	},
+	"tags": []
+}

@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`wasm generator with kebab-case project name should populate project files with the correct content 1`] = `
+"mod utils;
+
+use wasm_bindgen::prelude::*;
+
+// When the \`wee_alloc\` feature is enabled, use \`wee_alloc\` as the global
+// allocator.
+#[cfg(feature = \\"wee_alloc\\")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
+#[wasm_bindgen]
+extern {
+    fn alert(s: &str);
+}
+
+#[wasm_bindgen]
+pub fn greet() {
+    alert(\\"Hello from my-library!\\");
+}
+"
+`;
+
+exports[`wasm generator with kebab-case project name should populate project files with the correct content 2`] = `
+"pub fn set_panic_hook() {
+    // When the \`console_error_panic_hook\` feature is enabled, we can call the
+    // \`set_panic_hook\` function at least once during initialization, and then
+    // we will get better error messages if our code ever panics.
+    //
+    // For more details see
+    // https://github.com/rustwasm/console_error_panic_hook#readme
+    #[cfg(feature = \\"console_error_panic_hook\\")]
+    console_error_panic_hook::set_once();
+}
+"
+`;
+
+exports[`wasm generator with kebab-case project name should populate project files with the correct content 3`] = `
+"//! Test suite for the Web and headless browsers.
+
+#![cfg(target_arch = \\"wasm32\\")]
+
+extern crate wasm_bindgen_test;
+use wasm_bindgen_test::*;
+
+wasm_bindgen_test_configure!(run_in_browser);
+
+#[wasm_bindgen_test]
+fn pass() {
+    assert_eq!(1 + 1, 2);
+}
+"
+`;
+
+exports[`wasm generator with snake_case project name should populate project files with the correct content 1`] = `
+"mod utils;
+
+use wasm_bindgen::prelude::*;
+
+// When the \`wee_alloc\` feature is enabled, use \`wee_alloc\` as the global
+// allocator.
+#[cfg(feature = \\"wee_alloc\\")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
+#[wasm_bindgen]
+extern {
+    fn alert(s: &str);
+}
+
+#[wasm_bindgen]
+pub fn greet() {
+    alert(\\"Hello from my_library!\\");
+}
+"
+`;
+
+exports[`wasm generator with snake_case project name should populate project files with the correct content 2`] = `
+"pub fn set_panic_hook() {
+    // When the \`console_error_panic_hook\` feature is enabled, we can call the
+    // \`set_panic_hook\` function at least once during initialization, and then
+    // we will get better error messages if our code ever panics.
+    //
+    // For more details see
+    // https://github.com/rustwasm/console_error_panic_hook#readme
+    #[cfg(feature = \\"console_error_panic_hook\\")]
+    console_error_panic_hook::set_once();
+}
+"
+`;
+
+exports[`wasm generator with snake_case project name should populate project files with the correct content 3`] = `
+"//! Test suite for the Web and headless browsers.
+
+#![cfg(target_arch = \\"wasm32\\")]
+
+extern crate wasm_bindgen_test;
+use wasm_bindgen_test::*;
+
+wasm_bindgen_test_configure!(run_in_browser);
+
+#[wasm_bindgen_test]
+fn pass() {
+    assert_eq!(1 + 1, 2);
+}
+"
+`;

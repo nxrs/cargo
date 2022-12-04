@@ -1,0 +1,17 @@
+{
+	"name": "nx-cargo-e2e",
+	"projectType": "application",
+	"sourceRoot": "e2e/nx-cargo-e2e/src",
+	"targets": {
+		"e2e": {
+			"executor": "@nrwl/nx-plugin:e2e",
+			"options": {
+				"target": "nx-cargo:build",
+				"jestConfig": "e2e/nx-cargo-e2e/jest.config.js",
+        "silent": false
+			}
+		}
+	},
+	"tags": [],
+	"implicitDependencies": ["nx-cargo"]
+}

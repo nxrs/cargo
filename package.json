@@ -1,5 +1,5 @@
 {
-	"name": "nxrs",
+	"name": "noctifer20",
 	"version": "0.0.0",
 	"license": "MIT",
 	"scripts": {
@@ -8,7 +8,7 @@
 		"build": "nx build",
 		"test": "nx test",
 		"lint": "nx workspace-lint && nx lint",
-		"e2e": "jest e2e/cargo-e2e --runInBand",
+		"e2e": "jest e2e/nx-cargo-e2e --runInBand",
 		"affected:apps": "nx affected:apps",
 		"affected:libs": "nx affected:libs",
 		"affected:build": "nx affected:build",
