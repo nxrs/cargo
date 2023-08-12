@@ -13,6 +13,7 @@ export function processProjectGraph(
 ): ProjectGraph {
 	let metadata = cp.execSync("cargo metadata --format-version=1", {
 		encoding: "utf8",
+		maxBuffer: 2 << 30,
 	});
 	let { packages, workspace_members } = JSON.parse(metadata);
 	let builder = new ProjectGraphBuilder(graph);
