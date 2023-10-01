@@ -25,6 +25,38 @@ describe("common utils", () => {
 			expect(args.join(" ")).toEqual("cargo build --bin test-app");
 		});
 
+		it("should pass through unknown arguments to cargo", () => {
+			let ctx = mockExecutorContext("test-app:build");
+
+			let opts: CargoOptions & { [key: string]: string } = {
+				profile: "dev-custom",
+			};
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+
+			expect(args.join(" ")).toEqual(
+				"cargo build --bin test-app --profile dev-custom",
+			);
+
+			opts = { unknownArg: "lorem-ipsum" };
+			args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+
+			expect(args.join(" ")).toEqual(
+				"cargo build --bin test-app --unknown-arg lorem-ipsum",
+			);
+		});
+
+		it("allows specifying a custom binary target", () => {
+			let ctx = mockExecutorContext("test-app:build");
+
+			let opts: CargoOptions = {
+				bin: "custom-bin-name",
+			};
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+
+			expect(args.join(" ")).toEqual(
+				"cargo build -p test-app --bin custom-bin-name",
+			);
+		});
 	});
 
 	describe("normalizeGeneratorOptions", () => {
