@@ -22,13 +22,6 @@ type Options =
 	 * for more information.
 	 */
 	outDir?: string;
-	/**
-	 * Run `cargo run ...` instead of `cargo build ...`.
-	 *
-	 * @deprecated
-	 * Remove this property and use the `@nxrs/cargo:run` executor instead of `@nxrs/cargo:build`.
-	 */
-	run?: boolean;
 };
 
 export default Options;
