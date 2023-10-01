@@ -48,6 +48,13 @@ interface Names {
 	snakeName: string;
 }
 
+export enum Target {
+	Build,
+	Run,
+	Test,
+	Clippy,
+}
+
 export function cargoNames(name: string): Names {
 	let result = nrwl.names(name) as Names;
 	result.snakeName = result.constantName.toLowerCase();
@@ -128,7 +135,11 @@ export function updateWorkspaceMembers(host: Tree, opts: GeneratorOptions) {
 	host.write("Cargo.toml", updated);
 }
 
-export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
+export function parseCargoArgs(
+	target: Target,
+	opts: CargoOptions,
+	ctx: ExecutorContext,
+): string[] {
 	let args = [] as string[];
 
 	if (opts.toolchain) {
@@ -136,16 +147,12 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 	}
 
 	// prettier-ignore
-	switch (ctx.targetName) {
-		case "build": args.push("build"); break;
-		case "test":  args.push("test");  break;
-		case "run": args.push("run"); break;
+	switch (target) {
+		case Target.Build: args.push("build"); break;
+		case Target.Test:  args.push("test");  break;
+		case Target.Run: args.push("run"); break;
 		default: {
-			if (ctx.targetName == null) {
-				throw new Error("Expected target name to be non-null");
-			} else {
-				throw new Error(`Target '${ctx.targetName}' is invalid or not yet implemented`);
-			}
+			throw new Error(`Invalid or unimplemented target type: ${Target[target]}`);
 		}
 	}
 

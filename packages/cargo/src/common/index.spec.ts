@@ -1,6 +1,6 @@
 import { ExecutorContext, Tree } from "@nrwl/devkit";
 import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
-import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs } from ".";
+import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs, Target } from ".";
 
 describe("common utils", () => {
 	describe("parseCargoArgs", () => {
@@ -9,13 +9,22 @@ describe("common utils", () => {
 			let opts: CargoOptions = {
 				target: "86_64-pc-windows-gnu",
 			};
-			let args = parseCargoArgs(opts, ctx);
+			let args = parseCargoArgs(Target.Build, opts, ctx);
 			args.unshift("cargo");
 
 			expect(args.join(" ")).toEqual(
 				"cargo build --bin test-app --target 86_64-pc-windows-gnu"
 			);
 		});
+
+		it("should ignore the Nx-config-specified target name", () => {
+			let ctx = mockExecutorContext("test-app:flooptydoopty");
+			let opts: CargoOptions = {};
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+
+			expect(args.join(" ")).toEqual("cargo build --bin test-app");
+		});
+
 	});
 
 	describe("normalizeGeneratorOptions", () => {

@@ -3,6 +3,7 @@ import {
 	DisplayOptions,
 	FeatureSelection,
 	OutputOptions,
+	ManifestOptions,
 } from "../../common/schema";
 
 // prettier-ignore
@@ -21,6 +22,7 @@ type Options =
 	 * for more information.
 	 */
 	outDir?: string;
+	run?: boolean;
 };
 
 export default Options;
