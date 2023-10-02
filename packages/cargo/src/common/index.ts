@@ -2,6 +2,7 @@ import * as nrwl from "@nrwl/devkit";
 import { ExecutorContext, Tree } from "@nrwl/devkit";
 import * as chalk from "chalk";
 import * as cp from "child_process";
+import { kebabCase } from "lodash";
 
 import {
 	CompilationOptions,
@@ -27,10 +28,7 @@ export type CargoOptions = Partial<
 	& OutputOptions
 	& DisplayOptions
 	& ManifestOptions
-> & {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	[key: string]: any;
-};
+>;
 
 interface GeneratorCLIOptions {
 	name: string;
@@ -48,6 +46,13 @@ interface Names {
 	snakeName: string;
 }
 
+export enum Target {
+	Build,
+	Run,
+	Test,
+	Clippy,
+}
+
 export function cargoNames(name: string): Names {
 	let result = nrwl.names(name) as Names;
 	result.snakeName = result.constantName.toLowerCase();
@@ -62,7 +67,6 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 ): T & GeneratorOptions {
 	let layout = nrwl.getWorkspaceLayout(host);
 	let names = cargoNames(opts.name);
-	// let fileName = names.fileName;
 	let moduleName = names.snakeName;
 
 	// Only convert project/file name casing if it's invalid
@@ -128,53 +132,67 @@ export function updateWorkspaceMembers(host: Tree, opts: GeneratorOptions) {
 	host.write("Cargo.toml", updated);
 }
 
-export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string[] {
+export function parseCargoArgs<T extends CargoOptions>(
+	target: Target,
+	options: T,
+	ctx: ExecutorContext,
+): string[] {
+	let opts = { ...options };
 	let args = [] as string[];
 
-	if (opts.toolchain) {
-		args.push(`+${opts.toolchain}`);
-	}
+	if (opts.toolchain)
+		processArg(args, opts, "toolchain", `+${opts.toolchain}`);
 
 	// prettier-ignore
-	switch (ctx.targetName) {
-		case "build": args.push("build"); break;
-		case "test":  args.push("test");  break;
-		case "run": args.push("run"); break;
+	switch (target) {
+		case Target.Build: args.push("build"); break;
+		case Target.Test:  args.push("test");  break;
+		case Target.Run: args.push("run"); break;
 		default: {
-			if (ctx.targetName == null) {
-				throw new Error("Expected target name to be non-null");
-			} else {
-				throw new Error(`Target '${ctx.targetName}' is invalid or not yet implemented`);
-			}
+			throw new Error(`Invalid or unimplemented target type: ${Target[target]}`);
 		}
 	}
 
 	if (!ctx.projectName) {
 		throw new Error("Expected project name to be non-null");
 	}
-	if (
-		ctx.targetName === "build" &&
-		ctx.workspace.projects[ctx.projectName].projectType === "application"
+
+	if (opts.bin) {
+		processArg(
+			args, opts, "bin",
+			"-p", ctx.projectName,
+			"--bin", opts.bin,
+		);
+	} else if (
+		target === Target.Build
+		&& ctx.workspace.projects[ctx.projectName].projectType === "application"
 	) {
-		args.push("--bin");
+		args.push("--bin", ctx.projectName);
 	} else {
-		args.push("-p");
+		args.push("-p", ctx.projectName);
 	}
-	args.push(ctx.projectName);
 
 	if (opts.features) {
-		if (opts.features === "all") {
-			args.push("--all-features");
-		} else {
-			args.push("--features", opts.features);
-		}
+		const argsToAdd = opts.features === "all"
+			? ["--all-features"]
+			: ["--features", opts.features];
+
+		processArg(args, opts, "features", ...argsToAdd);
 	}
 
-	if (opts.noDefaultFeatures) args.push("--no-default-features");
-	if (opts.target) args.push("--target", opts.target);
-	if (opts.release) args.push("--release");
-	if (opts.targetDir) args.push("--target-dir", opts.targetDir);
-	if (opts.outDir) {
+	if (opts.noDefaultFeatures)
+		processArg(args, opts, "noDefaultFeatures", "--no-default-features");
+
+	if (opts.target)
+		processArg(args, opts, "target", "--target", opts.target);
+
+	if (opts.release)
+		processArg(args, opts, "release", "--release");
+
+	if (opts.targetDir)
+		processArg(args, opts, "targetDir", "--target-dir", opts.targetDir);
+
+	if ("outDir" in opts && !!(opts as any)["outDir"]) {
 		if (args[0] !== "+nightly") {
 			if (args[0].startsWith("+")) {
 				let label = chalk.bold.yellowBright.inverse(" WARNING ");
@@ -191,21 +209,58 @@ export function parseCargoArgs(opts: CargoOptions, ctx: ExecutorContext): string
 				args.unshift("+nightly");
 			}
 		}
-		args.push("-Z", "unstable-options", "--out-dir", opts.outDir);
+		args.push("-Z", "unstable-options", "--out-dir", (opts as any)["outDir"]);
+		delete (opts as any)["outDir"];
 	}
-	if (opts.verbose) args.push("-v");
-	if (opts.veryVerbose) args.push("-vv");
-	if (opts.quiet) args.push("-q");
-	if (opts.messageFormat) args.push("--message-format", opts.messageFormat);
-	if (opts.locked) args.push("--locked");
-	if (opts.frozen) args.push("--frozen");
-	if (opts.offline) args.push("--offline");
+
+	if (opts.verbose)
+		processArg(args, opts, "verbose", "-v");
+
+	if (opts.veryVerbose)
+		processArg(args, opts, "veryVerbose", "-vv");
+
+	if (opts.quiet)
+		processArg(args, opts, "quiet", "-q");
+
+	if (opts.messageFormat)
+		processArg(args, opts, "messageFormat", "--message-format", opts.messageFormat);
+
+	if (opts.locked)
+		processArg(args, opts, "locked", "--locked");
+
+	if (opts.frozen)
+		processArg(args, opts, "frozen", "--frozen");
+
+	if (opts.offline)
+		processArg(args, opts, "offline", "--offline");
+
+	// For the sake of future-proofing in the absence of updates to this plugin,
+	// pass any remaining options straight through to `cargo`
+	for (let [key, value] of Object.entries(opts)) {
+		args.push(`--${kebabCase(key)}`);
+
+		if (value !== true)
+			args.push(String(value));
+	}
 
 	return args;
 }
 
+function processArg(
+	args: string[],
+	opts: CargoOptions,
+	key: keyof CargoOptions,
+	...argsToAdd: string[]
+) {
+	args.push(...argsToAdd);
+	delete opts[key];
+}
+
 export function runCargo(args: string[], ctx: ExecutorContext) {
-	console.log(chalk.dim(`> cargo ${args.join(" ")}`));
+	console.log(chalk.dim`> cargo ${
+		args.map(arg => / /.test(arg) ? `"${arg}"` : arg)
+			.join(" ")
+	}`);
 
 	return new Promise<void>((resolve, reject) => {
 		cp.spawn("cargo", args, {

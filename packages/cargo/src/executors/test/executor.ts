@@ -1,11 +1,12 @@
 import { ExecutorContext } from "@nrwl/devkit";
 
-import { parseCargoArgs, runCargo } from "../../common";
+import { parseCargoArgs, runCargo, Target } from "../../common";
 import CLIOptions from "./schema";
 
 export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
-		let args = parseCargoArgs(opts, ctx);
+		let args = parseCargoArgs(Target.Test, opts, ctx);
+
 		await runCargo(args, ctx);
 
 		return { success: true };

@@ -19,10 +19,20 @@ export interface CompilationOptions {
 	 */
 	target?: string;
 	/**
+	 * Specify a custom `[[bin]]` binary target. Uses the project name if this is
+	 * not specified and the Nx `projectType` is "application".
+	 */
+	bin?: string;
+	/**
 	 * Build optimized artifacts with the `release` profile. See the [PROFILES](https://doc.rust-lang.org/cargo/commands/cargo-build.html#profiles)
 	 * section for details on how this affects profile selection.
 	 */
 	release?: boolean;
+	/**
+	 * See the [rustup documentation](https://rust-lang.github.io/rustup/overrides.html)
+	 * for more information about how toolchain overrides work.
+	 */
+	toolchain?: string;
 }
 
 export interface OutputOptions {

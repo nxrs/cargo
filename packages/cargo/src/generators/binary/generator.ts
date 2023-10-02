@@ -32,12 +32,9 @@ export default async function (host: Tree, opts: CLIOptions) {
 					},
 				},
 			},
-			run: {
-				executor: "@nxrs/cargo:build",
-				options: {
-					release: false,
-					run: true
-				},
+			dev: {
+				executor: "@nxrs/cargo:run",
+				options: {},
 			},
 			test: {
 				executor: "@nxrs/cargo:test",

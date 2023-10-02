@@ -7,6 +7,19 @@ import * as cp from "child_process";
 import * as util from "util";
 import * as chalk from "chalk";
 
+type JsonPrimitive = string | number | null;
+
+type JsonObject = {
+	[key: string]:
+		| JsonPrimitive | JsonObject
+		| JsonPrimitive[] | JsonObject[]
+}
+
+interface CargoMetadata {
+	packages: JsonObject[];
+	workspace_members: string[];
+}
+
 export function processProjectGraph(
 	graph: ProjectGraph,
 	ctx: ProjectGraphProcessorContext
@@ -15,18 +28,25 @@ export function processProjectGraph(
 		encoding: "utf8",
 		maxBuffer: 1024 * 1024 * 1024 * 32,
 	});
-	let { packages, workspace_members } = JSON.parse(metadata);
+	let { packages, workspace_members }: CargoMetadata = JSON.parse(metadata);
 	let builder = new ProjectGraphBuilder(graph);
 
 	workspace_members
-		.map(id => packages.find(pkg => pkg.id === id))
-		.filter(pkg => Object.keys(ctx.fileMap).includes(pkg.name))
+		.map(id => packages.find(pkg => pkg?.id === id))
+		.filter(pkg => Object.keys(ctx.fileMap).includes(pkg?.name as string))
 		.forEach(pkg => {
-			pkg.dependencies.forEach(dep => {
-				let depName = dep.source == null ? dep.name : `cargo:${dep.name}`;
+			if (!pkg) return;
+
+			(pkg.dependencies as JsonObject[])?.forEach(dep => {
+				let depName = dep.source == null
+					? dep.name as string
+					: `cargo:${dep.name}`;
 
 				if (!Object.keys(graph.nodes).includes(depName)) {
-					let depPkg = packages.find(pkg => pkg.source.startsWith(dep.source));
+					let depPkg = packages.find(pkg =>
+						(pkg.source as string)?.startsWith(dep.source as string)
+					);
+
 					if (!depPkg) {
 						console.log(
 							`${chalk.yellowBright.bold.inverse(
@@ -49,7 +69,7 @@ export function processProjectGraph(
 					});
 				}
 
-				builder.addImplicitDependency(pkg.name, depName);
+				builder.addImplicitDependency(pkg.name as string, depName);
 			});
 		});
 

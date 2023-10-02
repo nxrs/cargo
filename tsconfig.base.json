@@ -15,6 +15,7 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"strictNullChecks": true,
+		"noImplicitAny": true,
 		"paths": {
 			"nxrs/cargo": ["packages/cargo/src/index.ts"]
 		}

@@ -5,9 +5,7 @@ import CLIOptions from "./schema";
 
 export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
-		let args = opts.run
-			? parseCargoArgs(Target.Run, opts, ctx)
-			: parseCargoArgs(Target.Build, opts, ctx);
+		let args = parseCargoArgs(Target.Run, opts, ctx);
 
 		await runCargo(args, ctx);
 
