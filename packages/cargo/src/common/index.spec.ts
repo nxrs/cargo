@@ -25,6 +25,18 @@ describe("common utils", () => {
 			expect(args.join(" ")).toEqual("cargo build --bin test-app");
 		});
 
+		it("should not pass falsely arguments to cargo", () => {
+			let ctx = mockExecutorContext("test-app:build");
+
+			let opts: CargoOptions = {
+				release: false,
+				target: undefined,
+			};
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+
+			expect(args.join(" ")).toEqual("cargo build --bin test-app");
+		});
+
 		it("should pass through unknown arguments to cargo", () => {
 			let ctx = mockExecutorContext("test-app:build");
 

@@ -237,6 +237,8 @@ export function parseCargoArgs<T extends CargoOptions>(
 	// For the sake of future-proofing in the absence of updates to this plugin,
 	// pass any remaining options straight through to `cargo`
 	for (let [key, value] of Object.entries(opts)) {
+		if (!value) continue;
+
 		args.push(`--${kebabCase(key)}`);
 
 		if (value !== true)
