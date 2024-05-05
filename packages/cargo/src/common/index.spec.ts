@@ -17,6 +17,25 @@ describe("common utils", () => {
 			);
 		});
 
+		it("should support --package argument", () => {
+			let ctx = mockExecutorContext("test-app:build");
+			let opts: CargoOptions = {
+				package: "foo",
+			};
+
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			expect(args.join(" ")).toEqual("cargo build --bin foo");
+
+			args = ["cargo", ...parseCargoArgs(Target.Test, opts, ctx)];
+			expect(args.join(" ")).toEqual("cargo test -p foo");
+
+			args = ["cargo", ...parseCargoArgs(Target.Run, opts, ctx)];
+			expect(args.join(" ")).toEqual("cargo run -p foo");
+
+			args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)];
+			expect(args.join(" ")).toEqual("cargo clippy -p foo");
+		});
+
 		it("should ignore the Nx-config-specified target name", () => {
 			let ctx = mockExecutorContext("test-app:flooptydoopty");
 			let opts: CargoOptions = {};

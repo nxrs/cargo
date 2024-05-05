@@ -12,6 +12,7 @@ type Options =
 	& CompilationOptions
 	& OutputOptions
 	& DisplayOptions
-	& ManifestOptions;
+	& ManifestOptions
+	& { [key: string]: unknown };
 
 export default Options;

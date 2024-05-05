@@ -1,4 +1,15 @@
-export default interface Options {
+import {
+	CompilationOptions,
+	FeatureSelection,
+} from "../../common/schema";
+
+type Options =
+	& FeatureSelection
+	& CompilationOptions
+	& DisplayOptions
+	& ManifestOptions
+	& { [key: string]: unknown }
+& {
 	/** Automatically fix code where possible. */
 	fix?: boolean;
 	/**
@@ -12,4 +23,6 @@ export default interface Options {
 	 * @default true
 	 */
 	noDeps?: boolean;
-}
+};
+
+export default Options;

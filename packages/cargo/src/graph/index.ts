@@ -32,19 +32,19 @@ export function processProjectGraph(
 	let builder = new ProjectGraphBuilder(graph);
 
 	workspace_members
-		.map(id => packages.find(pkg => pkg?.id === id))
-		.filter(pkg => Object.keys(ctx.fileMap).includes(pkg?.name as string))
+		.map(id => packages.find(pkg => pkg?.["id"] === id))
+		.filter(pkg => Object.keys(ctx.fileMap).includes(pkg?.["name"] as string))
 		.forEach(pkg => {
 			if (!pkg) return;
 
-			(pkg.dependencies as JsonObject[])?.forEach(dep => {
-				let depName = dep.source == null
-					? dep.name as string
-					: `cargo:${dep.name}`;
+			(pkg["dependencies"] as JsonObject[])?.forEach(dep => {
+				let depName = dep["source"] == null
+					? dep["name"] as string
+					: `cargo:${dep["name"]}`;
 
 				if (!Object.keys(graph.nodes).includes(depName)) {
 					let depPkg = packages.find(pkg =>
-						(pkg.source as string)?.startsWith(dep.source as string)
+						(pkg["source"] as string)?.startsWith(dep["source"] as string)
 					);
 
 					if (!depPkg) {
@@ -62,14 +62,14 @@ export function processProjectGraph(
 						name: depName,
 						type: "cargo" as any,
 						data: {
-							version: depPkg.version,
-							packageName: depPkg.name,
+							version: depPkg["version"],
+							packageName: depPkg["name"],
 							files: [],
 						},
 					});
 				}
 
-				builder.addImplicitDependency(pkg.name as string, depName);
+				builder.addImplicitDependency(pkg["name"] as string, depName);
 			});
 		});
 
