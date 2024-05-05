@@ -44,6 +44,16 @@ describe("common utils", () => {
 			expect(args.join(" ")).toEqual("cargo build --bin test-app");
 		});
 
+		it("should correctly handle `release` option", () => {
+			let ctx = mockExecutorContext("test-app:build");
+
+			let args = ["cargo", ...parseCargoArgs(Target.Build, { release: false }, ctx)];
+			expect(args.join(" ")).toEqual("cargo build --bin test-app");
+
+			args = ["cargo", ...parseCargoArgs(Target.Build, { release: true }, ctx)];
+			expect(args.join(" ")).toEqual("cargo build --bin test-app --profile release");
+		});
+
 		it("should pass through unknown arguments to cargo", () => {
 			let ctx = mockExecutorContext("test-app:build");
 

@@ -189,8 +189,21 @@ export function parseCargoArgs<T extends CargoOptions>(
 	if (opts.target)
 		processArg(args, opts, "target", "--target", opts.target);
 
-	if (opts.release)
-		processArg(args, opts, "release", "--release");
+	if (opts.release != null) {
+		if (opts.release) {
+			args.push("--profile", "release");
+
+			if (opts["profile"]) {
+				let label = chalk.bold.yellowBright.inverse(" WARNING ");
+				console.log(
+					`${label} Conflicting options found: "release" and "profile" `
+						+ `-- "profile" will be overridden`
+				)
+				delete opts["profile"];
+			}
+		}
+		delete opts.release;
+	}
 
 	if (opts.targetDir)
 		processArg(args, opts, "targetDir", "--target-dir", opts.targetDir);
