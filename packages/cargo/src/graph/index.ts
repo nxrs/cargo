@@ -1,77 +1,179 @@
 import {
+	ProjectConfiguration,
 	ProjectGraph,
 	ProjectGraphBuilder,
-	ProjectGraphProcessorContext,
+	ProjectGraphProcessorContext as Context,
+	ProjectGraphProjectNode as ProjectNode,
 } from "@nrwl/devkit";
 import * as cp from "child_process";
-import * as util from "util";
-import * as chalk from "chalk";
+import * as os from "os";
+import * as path from "path";
 
-type JsonPrimitive = string | number | null;
+type VersionNumber = `${number}.${number}.${number}`;
+type PackageVersion = `${string}@${VersionNumber}` | VersionNumber;
+type CargoId = `${"registry"|"path"}+${"http"|"https"|"file"}://${string}#${PackageVersion}`;
 
-type JsonObject = {
-	[key: string]:
-		| JsonPrimitive | JsonObject
-		| JsonPrimitive[] | JsonObject[]
+interface CargoPackage {
+	name: string;
+	version: string;
+	id: CargoId;
+	license: string;
+	license_file: string | null;
+	description: string;
+	source: string | null;
+	dependencies: CargoDependency[];
+	targets: unknown; // TODO
+	features: Record<string, string[]>;
+	manifest_path: string;
+	metadata: unknown | null; // TODO
+	publish: unknown | null; // TODO
+	authors: string[];
+	categories: string[];
+	keywords: string[];
+	readme: string | null;
+	repository: string | null;
+	homepage: string | null;
+	documentation: string | null;
+	edition: string;
+	links: unknown | null; // TODO
+	default_run: unknown | null; // TODO
+	rust_version: string;
+}
+
+interface CargoDependency {
+	name: string;
+	source: string | null;
+	req: string;
+	kind: "build" | "dev" | null;
+	rename: string | null;
+	optional: boolean;
+	uses_default_features: boolean;
+	features: string[];
+	target: string | null;
+	registry: string | null;
+	path?: string;
 }
 
 interface CargoMetadata {
-	packages: JsonObject[];
-	workspace_members: string[];
+	packages: CargoPackage[];
+	workspace_members: CargoId[];
+	workspace_default_members: CargoId[];
+	resolve: {
+		nodes: ResolveNode[];
+		root: unknown;
+	}
+	target_directory: string;
+	version: number;
+	workspace_root: string;
+	metadata: unknown | null;
 }
 
-export function processProjectGraph(
-	graph: ProjectGraph,
-	ctx: ProjectGraphProcessorContext
-): ProjectGraph {
-	let metadata = cp.execSync("cargo metadata --format-version=1", {
-		encoding: "utf8",
-		maxBuffer: 1024 * 1024 * 1024 * 32,
-	});
-	let { packages, workspace_members }: CargoMetadata = JSON.parse(metadata);
+interface ResolveNode {
+	id: CargoId;
+	dependencies: CargoId[];
+}
+
+export function processProjectGraph(graph: ProjectGraph, ctx: Context): ProjectGraph {
+	let {
+		packages,
+		workspace_members: cargoWsMembers,
+		resolve: cargoResolve,
+		workspace_root: wsRoot,
+	} = getCargoMetadata();
+
 	let builder = new ProjectGraphBuilder(graph);
 
-	workspace_members
-		.map(id => packages.find(pkg => pkg?.["id"] === id))
-		.filter(pkg => Object.keys(ctx.fileMap).includes(pkg?.["name"] as string))
-		.forEach(pkg => {
-			if (!pkg) return;
+	let workspacePackages = new Map<CargoId, CargoPackage>();
+	for (let id of cargoWsMembers) {
+		let pkg = packages.find(p => p.id === id);
+		if (pkg) {
+			workspacePackages.set(id, pkg);
+		}
+	}
 
-			(pkg["dependencies"] as JsonObject[])?.forEach(dep => {
-				let depName = dep["source"] == null
-					? dep["name"] as string
-					: `cargo:${dep["name"]}`;
+	let nxData = mapCargoProjects(ctx, graph, wsRoot, workspacePackages);
+	for (let { id: sourceId, dependencies } of cargoResolve.nodes) {
+		if (nxData.has(sourceId)) {
+			let sourceProject = nxData.get(sourceId)!;
+			let graphDependencies = graph.dependencies[sourceProject.name];
 
-				if (!Object.keys(graph.nodes).includes(depName)) {
-					let depPkg = packages.find(pkg =>
-						(pkg["source"] as string)?.startsWith(dep["source"] as string)
-					);
-
-					if (!depPkg) {
-						console.log(
-							`${chalk.yellowBright.bold.inverse(
-								" WARN "
-							)} Failed to find package for dependency:`
-						);
-						console.log(util.inspect(dep));
-
-						return;
+			if (graphDependencies) {
+				for (let dependency of graphDependencies) {
+					if (!sourceProject.config.implicitDependencies?.includes(dependency.target)) {
+						builder.removeDependency(sourceProject.name, dependency.target);
 					}
-
-					builder.addNode({
-						name: depName,
-						type: "cargo" as any,
-						data: {
-							version: depPkg["version"],
-							packageName: depPkg["name"],
-							files: [],
-						},
-					});
 				}
+			}
 
-				builder.addImplicitDependency(pkg["name"] as string, depName);
-			});
-		});
+			for (let depId of dependencies) {
+				if (nxData.has(depId)) {
+					let targetProject = nxData.get(depId)!;
+					builder.addImplicitDependency(sourceProject.name, targetProject.name);
+				}
+			}
+		}
+	}
 
 	return builder.getUpdatedProjectGraph();
+}
+
+function getCargoMetadata(): CargoMetadata {
+	let availableMemory = os.freemem();
+	let metadata = cp.execSync("cargo metadata --format-version=1", {
+		encoding: "utf8",
+		maxBuffer: availableMemory,
+	});
+
+	return JSON.parse(metadata);
+}
+
+interface NxProjectData {
+	name: string;
+	config: ProjectConfiguration;
+	graphNode?: ProjectNode<{ [key: string]: unknown }>;
+}
+
+function mapCargoProjects(
+	ctx: Context,
+	graph: ProjectGraph,
+	wsRoot: string,
+	packages: Map<CargoId, CargoPackage>,
+) {
+	let result = new Map<CargoId, NxProjectData>();
+	for (let [cargoId, cargoPackage] of packages) {
+		if (!cargoPackage.manifest_path) {
+			throw new Error("Expected cargo package's `manifest_path` to exist");
+		}
+
+		let manifestDir = path.dirname(cargoPackage.manifest_path);
+		let projectDir = path
+			.relative(wsRoot, manifestDir)
+			.replace(/\\/g, "/");
+
+		let found = Object
+			.entries(ctx.workspace.projects)
+			.find(([, config]) => config.root === projectDir);
+
+		if (found) {
+			let [projectName, projectConfig] = found;
+			let projectNode = graph.nodes[projectName];
+
+			assert(projectNode?.type !== "npm");
+
+			result.set(cargoId, {
+				name: projectName,
+				config: projectConfig,
+				graphNode: projectNode,
+			});
+		}
+	}
+
+	return result;
+}
+
+function assert(expression: unknown, message?: string): asserts expression {
+	if (!expression) {
+		if (message) throw new Error(`Assertion failed: ${message}`);
+		else throw new Error("Assertion failed");
+	}
 }
