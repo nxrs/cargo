@@ -1,10 +1,13 @@
 import { ExecutorContext } from "@nrwl/devkit";
-import { runCargo } from "../../common";
+import { parseCargoArgs, runCargo, Target } from "../../common";
 import CLIOptions from "./schema";
 
 export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
-		let args = parseArgs(opts, ctx);
+		let args = [
+			...parseCargoArgs(Target.Clippy, opts, ctx),
+			...parseClippyArgs(opts),
+		];
 		await runCargo(args, ctx);
 
 		return { success: true };
@@ -16,14 +19,8 @@ export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	}
 }
 
-function parseArgs(opts: CLIOptions, ctx: ExecutorContext): string[] {
-	let args = ["clippy"];
-
-	if (!ctx.projectName) {
-		throw new Error("Expected project name to be non-null");
-	}
-	args.push("-p", ctx.projectName);
-	args.push("--");
+function parseClippyArgs(opts: CLIOptions): string[] {
+	let args = ["--"];
 
 	if (opts.failOnWarnings || opts.failOnWarnings == null) {
 		args.push("-D", "warnings");
@@ -31,8 +28,9 @@ function parseArgs(opts: CLIOptions, ctx: ExecutorContext): string[] {
 	if (opts.noDeps || opts.noDeps == null) {
 		args.push("--no-deps");
 	}
-
-	if (opts.fix) args.push("--fix");
+	if (opts.fix) {
+		args.push("--fix");
+	}
 
 	return args;
 }

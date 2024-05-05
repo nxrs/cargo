@@ -28,6 +28,7 @@ export type CargoOptions = Partial<
 	& OutputOptions
 	& DisplayOptions
 	& ManifestOptions
+	& { [key: string]: unknown }
 >;
 
 interface GeneratorCLIOptions {
@@ -148,28 +149,30 @@ export function parseCargoArgs<T extends CargoOptions>(
 		case Target.Build: args.push("build"); break;
 		case Target.Test:  args.push("test");  break;
 		case Target.Run: args.push("run"); break;
-		default: {
-			throw new Error(`Invalid or unimplemented target type: ${Target[target]}`);
-		}
+		case Target.Clippy: args.push("clippy"); break;
 	}
 
 	if (!ctx.projectName) {
 		throw new Error("Expected project name to be non-null");
 	}
 
+	let packageName = (opts["package"] as undefined | string) ?? ctx.projectName;
+	if ("package" in opts)
+			delete opts["package"];
+
 	if (opts.bin) {
 		processArg(
 			args, opts, "bin",
-			"-p", ctx.projectName,
+			"-p", packageName,
 			"--bin", opts.bin,
 		);
 	} else if (
 		target === Target.Build
 		&& ctx.workspace.projects[ctx.projectName].projectType === "application"
 	) {
-		args.push("--bin", ctx.projectName);
+		args.push("--bin", packageName);
 	} else {
-		args.push("-p", ctx.projectName);
+		args.push("-p", packageName);
 	}
 
 	if (opts.features) {

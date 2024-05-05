@@ -13,6 +13,7 @@ type Options =
 	& OutputOptions
 	& DisplayOptions
 	& ManifestOptions
+	& { [key: string]: unknown }
 & {
 	/**
 	 * Copy final artifacts to this directory.
