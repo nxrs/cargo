@@ -24,11 +24,11 @@ export default async function (host: Tree, opts: CLIOptions) {
 			build: {
 				executor: '@nxrs/cargo:build',
 				options: {
-					release: false,
+					profile: "dev",
 				},
 				configurations: {
 					production: {
-						release: true,
+						profile: "release",
 					},
 				},
 			},
