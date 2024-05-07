@@ -225,7 +225,7 @@
           },
           {
             "file": "packages/cargo/src/executors/build/schema.json",
-            "hash": "790939281216199767"
+            "hash": "2746771517973309529"
           },
           {
             "file": "packages/cargo/src/executors/clippy/executor.ts",
@@ -244,7 +244,7 @@
           },
           {
             "file": "packages/cargo/src/executors/clippy/schema.json",
-            "hash": "17646546077430943923"
+            "hash": "5893864484482109614"
           },
           {
             "file": "packages/cargo/src/executors/run/executor.ts",
@@ -263,7 +263,7 @@
           },
           {
             "file": "packages/cargo/src/executors/run/schema.json",
-            "hash": "378981544282353221"
+            "hash": "15886984678678372438"
           },
           {
             "file": "packages/cargo/src/executors/test/executor.ts",
@@ -282,7 +282,7 @@
           },
           {
             "file": "packages/cargo/src/executors/test/schema.json",
-            "hash": "11096389854700246235"
+            "hash": "17746465982226955480"
           },
           {
             "file": "packages/cargo/src/generators/binary/files/Cargo.toml__template__",
