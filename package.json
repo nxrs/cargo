@@ -38,7 +38,6 @@
     "@nrwl/linter": "14.8.8",
     "@nrwl/node": "14.8.8",
     "@nrwl/nx-plugin": "14.8.8",
-    "@nrwl/tao": "14.8.8",
     "@nrwl/workspace": "14.8.8",
     "@types/jest": "28.1.8",
     "@types/lodash": "^4.14.199",
@@ -55,7 +54,7 @@
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
     "tslib": "^2.0.0",
-    "typescript": "4.8.4"
+    "typescript": "4.8.4",
+    "nx": "14.8.8"
   }
 }
-
