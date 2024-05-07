@@ -25,6 +25,7 @@
 
 # misc
 /.sass-cache
+/.nx
 /connect.lock
 /coverage
 /libpeerconnection.log
