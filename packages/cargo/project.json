@@ -1,5 +1,4 @@
 {
-	"root": "packages/cargo",
 	"sourceRoot": "packages/cargo/src",
 	"projectType": "library",
 	"targets": {
