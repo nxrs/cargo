@@ -1,5 +1,5 @@
-import * as nrwl from "@nrwl/devkit";
-import { Tree } from "@nrwl/devkit";
+import * as nrwl from "@nx/devkit";
+import { Tree } from "@nx/devkit";
 import * as path from "path";
 
 import CLIOptions from "./schema";

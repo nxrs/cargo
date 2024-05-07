@@ -1,5 +1,5 @@
-import { ExecutorContext, Tree } from "@nrwl/devkit";
-import { createTreeWithEmptyV1Workspace } from "@nrwl/devkit/testing";
+import { ExecutorContext, Tree } from "@nx/devkit";
+import { createTreeWithEmptyV1Workspace } from "@nx/devkit/testing";
 import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs, Target } from ".";
 
 describe("common utils", () => {

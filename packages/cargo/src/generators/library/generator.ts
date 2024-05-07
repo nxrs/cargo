@@ -1,5 +1,5 @@
-import * as nrwl from "@nrwl/devkit";
-import { Tree } from "@nrwl/devkit";
+import * as nrwl from "@nx/devkit";
+import { Tree } from "@nx/devkit";
 import * as path from "path";
 
 import {
@@ -22,7 +22,7 @@ export default async function (host: Tree, opts: CLIOptions) {
 		sourceRoot: `${options.projectRoot}/src`,
 		targets: {
 			build: {
-				executor: '@nxrs/cargo:build',
+				executor: "@nxrs/cargo:build",
 				options: {
 					profile: "dev",
 				},

@@ -1,5 +1,5 @@
-import { createTreeWithEmptyV1Workspace } from "@nrwl/devkit/testing";
-import { Tree } from "@nrwl/devkit";
+import { createTreeWithEmptyV1Workspace } from "@nx/devkit/testing";
+import { Tree } from "@nx/devkit";
 
 import runGenerator from "./generator";
 
