@@ -31,7 +31,6 @@
 		"tslib": "^2.0.0"
 	},
 	"devDependencies": {
-		"@nrwl/cli": "15.9.2",
 		"@nrwl/devkit": "16.10.0",
 		"@nrwl/eslint-plugin-nx": "16.10.0",
 		"@nrwl/jest": "16.10.0",
