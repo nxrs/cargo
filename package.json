@@ -35,7 +35,6 @@
 		"@nx/eslint-plugin": "v17.0.6",
 		"@nx/jest": "v17.0.6",
 		"@nx/js": "v17.0.6",
-		"@nx/linter": "v17.0.6",
 		"@nx/node": "v17.0.6",
 		"@nx/plugin": "v17.0.6",
 		"@nx/workspace": "v17.0.6",
@@ -58,6 +57,7 @@
 		"ts-jest": "29.1.2",
 		"ts-node": "10.9.1",
 		"tslib": "^2.0.0",
-		"typescript": "5.1.6"
+		"typescript": "5.1.6",
+		"@nx/eslint": "v17.0.6"
 	}
 }
