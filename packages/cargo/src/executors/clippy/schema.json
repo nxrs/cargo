@@ -1,26 +1,25 @@
 {
-	"version": 2,
-	"outputCapture": "direct-nodejs",
-	"$schema": "http://json-schema.org/schema",
-	"cli": "nx",
-	"title": "Clippy executor",
-	"description": "",
-	"type": "object",
-	"properties": {
-		"fix": {
-			"type": "boolean",
-			"description": "Automatically fix code where possible."
-		},
-		"failOnWarnings": {
-			"type": "boolean",
-			"description": "Return with a non-zero exit code when lint warnings are encountered.",
-			"default": true
-		},
-		"noDeps": {
-			"type": "boolean",
-			"description": "By default, Clippy will run on the selected project **and** any dependencies that are members of the workspace. To run Clippy **only** on this project, use this flag.",
-			"default": true
-		}
-	},
-	"required": []
+  "version": 2,
+  "outputCapture": "direct-nodejs",
+  "$schema": "http://json-schema.org/schema",
+  "title": "Clippy executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "fix": {
+      "type": "boolean",
+      "description": "Automatically fix code where possible."
+    },
+    "failOnWarnings": {
+      "type": "boolean",
+      "description": "Return with a non-zero exit code when lint warnings are encountered.",
+      "default": true
+    },
+    "noDeps": {
+      "type": "boolean",
+      "description": "By default, Clippy will run on the selected project **and** any dependencies that are members of the workspace. To run Clippy **only** on this project, use this flag.",
+      "default": true
+    }
+  },
+  "required": []
 }
