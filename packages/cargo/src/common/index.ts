@@ -175,8 +175,9 @@ export function parseCargoArgs<T extends CargoOptions>(
 	}
 
 	if (opts.features) {
-		const argsToAdd =
-			opts.features === "all" ? ["--all-features"] : ["--features", opts.features];
+		let argsToAdd = opts.features === "all"
+			? ["--all-features"]
+			: ["--features", opts.features];
 
 		processArg(args, opts, "features", ...argsToAdd);
 	}
