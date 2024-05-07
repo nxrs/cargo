@@ -35,6 +35,7 @@
 		"@nrwl/devkit": "14.8.8",
 		"@nrwl/eslint-plugin-nx": "14.8.8",
 		"@nrwl/jest": "14.8.8",
+		"@nrwl/js": "14.8.8",
 		"@nrwl/linter": "14.8.8",
 		"@nrwl/node": "14.8.8",
 		"@nrwl/nx-plugin": "14.8.8",
