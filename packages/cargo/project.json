@@ -14,7 +14,7 @@
 			"executor": "@nrwl/jest:jest",
 			"outputs": ["coverage/packages/cargo"],
 			"options": {
-				"jestConfig": "packages/cargo/jest.config.js",
+				"jestConfig": "packages/cargo/jest.config.ts",
 				"passWithNoTests": true
 			}
 		},
