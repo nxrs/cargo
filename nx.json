@@ -19,18 +19,15 @@
 			}
 		}
 	},
-	"targetDependencies": {
-		"build": [
-			{
-				"target": "build",
-				"projects": "dependencies"
-			}
-		]
-	},
 	"workspaceLayout": {
 		"appsDir": "e2e",
 		"libsDir": "packages"
 	},
 	"defaultProject": "cargo",
-	"$schema": "./node_modules/nx/schemas/nx-schema.json"
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"targetDefaults": {
+		"build": {
+			"dependsOn": ["^build"]
+		}
+	}
 }
