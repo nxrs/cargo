@@ -1,6 +1,11 @@
 import * as nrwl from "@nx/plugin/testing";
+import { env } from "process";
 
 describe("generate cargo:lib", () => {
+	beforeEach(() => {
+		env.NX_DAEMON = "false";
+	});
+
 	it("should create a new Rust library", async () => {
 		let lib = nrwl.uniq("cargo");
 		nrwl.ensureNxProject("@nxrs/cargo", "dist/packages/cargo");
@@ -8,7 +13,7 @@ describe("generate cargo:lib", () => {
 		await nrwl.runNxCommandAsync(`generate @nxrs/cargo:lib ${lib}`);
 
 		expect(() => {
-			nrwl.checkFilesExist(`libs/${lib}/src/lib.rs`);
+			nrwl.checkFilesExist(`${lib}/src/lib.rs`);
 		}).not.toThrow();
 	}, 120000);
 
@@ -22,7 +27,7 @@ describe("generate cargo:lib", () => {
 			);
 
 			expect(() => {
-				nrwl.checkFilesExist(`libs/subdir/${lib}/src/lib.rs`);
+				nrwl.checkFilesExist(`subdir/${lib}/src/lib.rs`);
 			}).not.toThrow();
 		}, 120000);
 	});
@@ -36,7 +41,7 @@ describe("generate cargo:lib", () => {
 				`generate @nxrs/cargo:lib ${lib} --tags e2etag,e2ePackage`
 			);
 
-			let projectCfg = nrwl.readJson(`libs/${lib}/project.json`);
+			let projectCfg = nrwl.readJson(`${lib}/project.json`);
 
 			expect(projectCfg.tags).toEqual(["e2etag", "e2ePackage"]);
 		}, 120000);

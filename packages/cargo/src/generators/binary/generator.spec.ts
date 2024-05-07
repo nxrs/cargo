@@ -1,12 +1,12 @@
 import { Tree } from "@nx/devkit";
-import { createTreeWithEmptyV1Workspace } from "@nx/devkit/testing";
+import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
 import runGenerator from "./generator";
 
 describe("binary generator", () => {
 	let appTree: Tree;
 
 	beforeAll(async () => {
-		appTree = createTreeWithEmptyV1Workspace();
+		appTree = createTreeWithEmptyWorkspace({ layout: "apps-libs" });
 	});
 
 	describe("with kebab-case project name", () => {

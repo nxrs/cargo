@@ -154,11 +154,16 @@ export function parseCargoArgs<T extends CargoOptions>(
 	let packageName = (opts["package"] as undefined | string) ?? ctx.projectName;
 	if ("package" in opts) delete opts["package"];
 
+	let projects = ctx.projectsConfigurations?.projects ?? ctx.workspace?.projects;
+	if (!projects) {
+		throw new Error("Failed to find projects map from executor context");
+	}
+
 	if (opts.bin) {
 		processArg(args, opts, "bin", "-p", packageName, "--bin", opts.bin);
 	} else if (
 		target === Target.Build &&
-		ctx.workspace.projects[ctx.projectName].projectType === "application"
+		projects[ctx.projectName].projectType === "application"
 	) {
 		args.push("--bin", packageName);
 	} else {

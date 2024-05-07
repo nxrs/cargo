@@ -1,5 +1,5 @@
 import { ExecutorContext, Tree } from "@nx/devkit";
-import { createTreeWithEmptyV1Workspace } from "@nx/devkit/testing";
+import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
 import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs, Target } from ".";
 
 describe("common utils", () => {
@@ -92,7 +92,7 @@ describe("common utils", () => {
 		let appTree: Tree;
 
 		beforeAll(() => {
-			appTree = createTreeWithEmptyV1Workspace();
+			appTree = createTreeWithEmptyWorkspace();
 		});
 
 		it("should respect kebab-case project names", () => {

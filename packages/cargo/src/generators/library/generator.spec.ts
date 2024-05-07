@@ -1,12 +1,12 @@
 import { Tree } from "@nx/devkit";
-import { createTreeWithEmptyV1Workspace } from "@nx/devkit/testing";
+import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
 import runGenerator from "./generator";
 
 describe("library generator", () => {
 	let appTree: Tree;
 
 	beforeAll(() => {
-		appTree = createTreeWithEmptyV1Workspace();
+		appTree = createTreeWithEmptyWorkspace({ layout: "apps-libs" });
 	});
 
 	describe("with kebab-case project name", () => {
@@ -53,7 +53,7 @@ describe("library generator", () => {
 
 	describe("with snake_case project name", () => {
 		beforeAll(async () => {
-			appTree = createTreeWithEmptyV1Workspace();
+			appTree = createTreeWithEmptyWorkspace({ layout: "apps-libs" });
 			await runGenerator(appTree, { name: "my_library" });
 		});
 
