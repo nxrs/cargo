@@ -12,7 +12,7 @@
 			"outputs": ["{options.outputFile}"]
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
+			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/packages/cargo"],
 			"options": {
 				"jestConfig": "packages/cargo/jest.config.ts",
