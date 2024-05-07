@@ -1,5 +1,9 @@
-import * as nrwl from "@nx/devkit";
-import { ExecutorContext, Tree } from "@nx/devkit";
+import {
+	ExecutorContext,
+	Tree,
+	getWorkspaceLayout,
+	names as nxNames,
+} from "@nx/devkit";
 import * as chalk from "chalk";
 import * as cp from "child_process";
 import { kebabCase } from "lodash";
@@ -55,7 +59,7 @@ export enum Target {
 }
 
 export function cargoNames(name: string): Names {
-	let result = nrwl.names(name) as Names;
+	let result = nxNames(name) as Names;
 	result.snakeName = result.constantName.toLowerCase();
 
 	return result;
@@ -66,7 +70,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	host: Tree,
 	opts: T
 ): T & GeneratorOptions {
-	let layout = nrwl.getWorkspaceLayout(host);
+	let layout = getWorkspaceLayout(host);
 	let names = cargoNames(opts.name);
 	let moduleName = names.snakeName;
 
@@ -81,7 +85,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	}[projectType];
 
 	let projectDirectory = opts.directory
-		? `${nrwl.names(opts.directory).fileName}/${fileName}`
+		? `${nxNames(opts.directory).fileName}/${fileName}`
 		: fileName;
 
 	let projectRoot = `${rootDir}/${projectDirectory}`;

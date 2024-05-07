@@ -1,5 +1,10 @@
-import * as nrwl from "@nx/devkit";
-import { Tree } from "@nx/devkit";
+import {
+	Tree,
+	formatFiles,
+	generateFiles,
+	readNxJson,
+	updateNxJson,
+} from "@nx/devkit";
 import * as path from "path";
 
 import CLIOptions from "./schema";
@@ -17,7 +22,7 @@ export default async function (host: Tree, opts: CLIOptions) {
 	addFiles(host, options);
 	addPlugin(host, options);
 
-	await nrwl.formatFiles(host);
+	await formatFiles(host);
 }
 
 function normalizeOptions(_: Tree, options: CLIOptions): Options {
@@ -32,7 +37,7 @@ function addFiles(host: Tree, options: Options) {
 		template: "",
 	};
 
-	nrwl.generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
+	generateFiles(host, path.join(__dirname, "files"), ".", templateOptions);
 
 	let gitignore = host.read(".gitignore")?.toString() ?? "";
 	gitignore += "/target";
@@ -41,10 +46,10 @@ function addFiles(host: Tree, options: Options) {
 }
 
 function addPlugin(host: Tree, _: Options) {
-	let config = nrwl.readWorkspaceConfiguration(host);
+	let config = readNxJson(host) ?? {};
 	let plugins = config.plugins
 		? config.plugins.concat("@nxrs/cargo")
 		: ["@nxrs/cargo"];
 
-	nrwl.updateWorkspaceConfiguration(host, { ...config, plugins });
+	updateNxJson(host, { ...config, plugins });
 }
