@@ -133,7 +133,6 @@ function mockExecutorContext(command: string): ExecutorContext {
 		root: "C:/test",
 		isVerbose: false,
 		workspace: {
-			npmScope: "@test",
 			projects: {
 				"test-app": {
 					root: "apps/test-app",
