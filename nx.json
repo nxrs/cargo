@@ -31,9 +31,6 @@
 		"appsDir": "e2e",
 		"libsDir": "packages"
 	},
-	"cli": {
-		"defaultCollection": "@nrwl/nx-plugin"
-	},
 	"defaultProject": "cargo",
 	"$schema": "./node_modules/nx/schemas/nx-schema.json"
 }
