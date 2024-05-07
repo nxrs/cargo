@@ -1,4 +1,4 @@
-import * as nrwl from "@nrwl/nx-plugin/testing";
+import * as nrwl from "@nx/plugin/testing";
 
 describe("generate cargo:lib && generate cargo:app", () => {
 	it("should generate two projects in the same workspace", async () => {

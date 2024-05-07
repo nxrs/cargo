@@ -1,4 +1,4 @@
-import * as nrwl from "@nrwl/nx-plugin/testing";
+import * as nrwl from "@nx/plugin/testing";
 
 describe("generate cargo:app", () => {
 	it("should create a new Rust application", async () => {
