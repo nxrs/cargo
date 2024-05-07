@@ -34,5 +34,6 @@
 	"cli": {
 		"defaultCollection": "@nrwl/nx-plugin"
 	},
-	"defaultProject": "cargo"
+	"defaultProject": "cargo",
+	"$schema": "./node_modules/nx/schemas/nx-schema.json"
 }
