@@ -4,10 +4,8 @@ import CLIOptions from "./schema";
 
 export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
-		let args = [
-			...parseCargoArgs(Target.Clippy, opts, ctx),
-			...parseClippyArgs(opts),
-		];
+		let args = parseCargoArgs(Target.Clippy, opts, ctx);
+
 		await runCargo(args, ctx);
 
 		return { success: true };
@@ -17,20 +15,4 @@ export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 			reason: err?.message,
 		};
 	}
-}
-
-function parseClippyArgs(opts: CLIOptions): string[] {
-	let args = ["--"];
-
-	if (opts.failOnWarnings || opts.failOnWarnings == null) {
-		args.push("-D", "warnings");
-	}
-	if (opts.noDeps || opts.noDeps == null) {
-		args.push("--no-deps");
-	}
-	if (opts.fix) {
-		args.push("--fix");
-	}
-
-	return args;
 }

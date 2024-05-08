@@ -1,6 +1,8 @@
 import {
 	CompilationOptions,
+	DisplayOptions,
 	FeatureSelection,
+	ManifestOptions,
 } from "../../common/schema";
 
 type Options =
