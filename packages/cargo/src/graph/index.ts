@@ -11,10 +11,7 @@ import * as path from "path";
 
 type VersionNumber = `${number}.${number}.${number}`;
 type PackageVersion = `${string}@${VersionNumber}` | VersionNumber;
-type CargoId = `${"registry" | "path"}+${
-	| "http"
-	| "https"
-	| "file"}://${string}#${PackageVersion}`;
+type CargoId = `${"registry"|"path"}+${"http"|"https"|"file"}://${string}#${PackageVersion}`;
 
 interface CargoPackage {
 	name: string;
@@ -76,10 +73,7 @@ interface ResolveNode {
 	dependencies: CargoId[];
 }
 
-export function processProjectGraph(
-	graph: ProjectGraph,
-	ctx: Context
-): ProjectGraph {
+export function processProjectGraph(graph: ProjectGraph, ctx: Context): ProjectGraph {
 	let {
 		packages,
 		workspace_members: cargoWsMembers,
@@ -105,9 +99,7 @@ export function processProjectGraph(
 
 			if (graphDependencies) {
 				for (let dependency of graphDependencies) {
-					if (
-						!sourceProject.config.implicitDependencies?.includes(dependency.target)
-					) {
+					if (!sourceProject.config.implicitDependencies?.includes(dependency.target)) {
 						builder.removeDependency(sourceProject.name, dependency.target);
 					}
 				}
@@ -145,7 +137,7 @@ function mapCargoProjects(
 	ctx: Context,
 	graph: ProjectGraph,
 	wsRoot: string,
-	packages: Map<CargoId, CargoPackage>
+	packages: Map<CargoId, CargoPackage>,
 ) {
 	let result = new Map<CargoId, NxProjectData>();
 	for (let [cargoId, cargoPackage] of packages) {
@@ -154,11 +146,13 @@ function mapCargoProjects(
 		}
 
 		let manifestDir = path.dirname(cargoPackage.manifest_path);
-		let projectDir = path.relative(wsRoot, manifestDir).replace(/\\/g, "/");
+		let projectDir = path
+			.relative(wsRoot, manifestDir)
+			.replace(/\\/g, "/");
 
-		let found = Object.entries(ctx.workspace.projects).find(
-			([, config]) => config.root === projectDir
-		);
+		let found = Object
+			.entries(ctx.workspace.projects)
+			.find(([, config]) => config.root === projectDir);
 
 		if (found) {
 			let [projectName, projectConfig] = found;
