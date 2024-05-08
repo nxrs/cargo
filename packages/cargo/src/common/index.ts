@@ -283,7 +283,7 @@ function processArg(
 
 export function runCargo(args: string[], ctx: ExecutorContext) {
 	console.log(chalk.dim`> cargo ${
-		args.map(arg => (/ /.test(arg) ? `"${arg}"` : arg))
+		args.map(arg => / /.test(arg) ? `"${arg}"` : arg)
 			.join(" ")
 	}`);
 
