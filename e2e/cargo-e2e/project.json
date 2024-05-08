@@ -3,6 +3,8 @@
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"projectType": "application",
 	"sourceRoot": "e2e\\cargo-e2e/src",
+	"tags": [],
+	"implicitDependencies": ["cargo"],
 	"targets": {
 		"e2e": {
 			"executor": "@nx/jest:jest",
@@ -10,11 +12,10 @@
 				"npmPackageName": "@nxrs/cargo",
 				"pluginOutputPath": "dist/packages/cargo",
 				"jestConfig": "e2e/cargo-e2e/jest.config.js",
-				"runInBand": true
+				"runInBand": true,
+				"passWithNoTests": false
 			},
 			"dependsOn": ["cargo:build"]
 		}
-	},
-	"tags": [],
-	"implicitDependencies": ["cargo"]
+	}
 }

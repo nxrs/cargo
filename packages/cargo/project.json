@@ -3,6 +3,7 @@
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
 	"sourceRoot": "packages/cargo/src",
 	"projectType": "library",
+	"tags": [],
 	"targets": {
 		"lint": {
 			"executor": "@nx/eslint:lint",
@@ -15,8 +16,7 @@
 			"executor": "@nx/jest:jest",
 			"outputs": ["{workspaceRoot}/coverage/packages/cargo"],
 			"options": {
-				"jestConfig": "packages/cargo/jest.config.ts",
-				"passWithNoTests": true
+				"jestConfig": "packages/cargo/jest.config.ts"
 			}
 		},
 		"build": {
@@ -52,6 +52,5 @@
 				]
 			}
 		}
-	},
-	"tags": []
+	}
 }
