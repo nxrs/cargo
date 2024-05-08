@@ -75,9 +75,13 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	let moduleName = names.snakeName;
 
 	// Only convert project/file name casing if it's invalid
-	let projectName = /^[-_a-zA-Z0-9]+$/.test(opts.name) ? opts.name : names.snakeName;
+	let projectName = /^[-_a-zA-Z0-9]+$/.test(opts.name)
+		? opts.name
+		: names.snakeName;
 
-	let fileName = /^[-_a-zA-Z0-9]+$/.test(opts.name) ? opts.name : names.fileName;
+	let fileName = /^[-_a-zA-Z0-9]+$/.test(opts.name)
+		? opts.name
+		: names.fileName;
 
 	let rootDir = {
 		application: layout.appsDir,
@@ -136,12 +140,13 @@ export function updateWorkspaceMembers(host: Tree, opts: GeneratorOptions) {
 export function parseCargoArgs<T extends CargoOptions>(
 	target: Target,
 	options: T,
-	ctx: ExecutorContext
+	ctx: ExecutorContext,
 ): string[] {
 	let opts = { ...options };
 	let args = [] as string[];
 
-	if (opts.toolchain) processArg(args, opts, "toolchain", `+${opts.toolchain}`);
+	if (opts.toolchain)
+		processArg(args, opts, "toolchain", `+${opts.toolchain}`);
 
 	// prettier-ignore
 	switch (target) {
@@ -156,7 +161,8 @@ export function parseCargoArgs<T extends CargoOptions>(
 	}
 
 	let packageName = (opts["package"] as undefined | string) ?? ctx.projectName;
-	if ("package" in opts) delete opts["package"];
+	if ("package" in opts)
+		delete opts["package"];
 
 	let projects = ctx.projectsConfigurations?.projects ?? ctx.workspace?.projects;
 	if (!projects) {
@@ -164,10 +170,14 @@ export function parseCargoArgs<T extends CargoOptions>(
 	}
 
 	if (opts.bin) {
-		processArg(args, opts, "bin", "-p", packageName, "--bin", opts.bin);
+		processArg(
+			args, opts, "bin",
+			"-p", packageName,
+			"--bin", opts.bin,
+		);
 	} else if (
-		target === Target.Build &&
-		projects[ctx.projectName].projectType === "application"
+		target === Target.Build
+		&& projects[ctx.projectName].projectType === "application"
 	) {
 		args.push("--bin", packageName);
 	} else {
@@ -185,7 +195,8 @@ export function parseCargoArgs<T extends CargoOptions>(
 	if (opts.noDefaultFeatures)
 		processArg(args, opts, "noDefaultFeatures", "--no-default-features");
 
-	if (opts.target) processArg(args, opts, "target", "--target", opts.target);
+	if (opts.target)
+		processArg(args, opts, "target", "--target", opts.target);
 
 	if (opts.release != null) {
 		if (opts.release) {
@@ -194,8 +205,8 @@ export function parseCargoArgs<T extends CargoOptions>(
 			if (opts["profile"]) {
 				let label = chalk.bold.yellowBright.inverse(" WARNING ");
 				console.log(
-					`${label} Conflicting options found: "release" and "profile" ` +
-						`-- "profile" will be overridden`
+					`${label} Conflicting options found: "release" and "profile" `
+						+ `-- "profile" will be overridden`
 				);
 				delete opts["profile"];
 			}
@@ -227,27 +238,34 @@ export function parseCargoArgs<T extends CargoOptions>(
 		delete (opts as any)["outDir"];
 	}
 
-	if (opts.verbose) processArg(args, opts, "verbose", "-v");
+	if (opts.verbose)
+		processArg(args, opts, "verbose", "-v");
 
-	if (opts.veryVerbose) processArg(args, opts, "veryVerbose", "-vv");
+	if (opts.veryVerbose)
+		processArg(args, opts, "veryVerbose", "-vv");
 
-	if (opts.quiet) processArg(args, opts, "quiet", "-q");
+	if (opts.quiet)
+		processArg(args, opts, "quiet", "-q");
 
 	if (opts.messageFormat)
 		processArg(args, opts, "messageFormat", "--message-format", opts.messageFormat);
 
-	if (opts.locked) processArg(args, opts, "locked", "--locked");
+	if (opts.locked)
+		processArg(args, opts, "locked", "--locked");
 
-	if (opts.frozen) processArg(args, opts, "frozen", "--frozen");
+	if (opts.frozen)
+		processArg(args, opts, "frozen", "--frozen");
 
-	if (opts.offline) processArg(args, opts, "offline", "--offline");
+	if (opts.offline)
+		processArg(args, opts, "offline", "--offline");
 
 	// For the sake of future-proofing in the absence of updates to this plugin,
 	// pass any remaining options straight through to `cargo`
 	for (let [key, value] of Object.entries(opts)) {
 		args.push(`--${kebabCase(key)}`);
 
-		if (value !== true) args.push(String(value));
+		if (value !== true)
+			args.push(String(value));
 	}
 
 	return args;
@@ -264,11 +282,10 @@ function processArg(
 }
 
 export function runCargo(args: string[], ctx: ExecutorContext) {
-	console.log(
-		chalk.dim`> cargo ${args
-			.map(arg => (/ /.test(arg) ? `"${arg}"` : arg))
-			.join(" ")}`
-	);
+	console.log(chalk.dim`> cargo ${
+		args.map(arg => (/ /.test(arg) ? `"${arg}"` : arg))
+			.join(" ")
+	}`);
 
 	return new Promise<void>((resolve, reject) => {
 		cp.spawn("cargo", args, {

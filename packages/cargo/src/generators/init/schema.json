@@ -1,14 +1,14 @@
 {
-  "$schema": "http://json-schema.org/schema",
-  "id": "Cargo",
-  "title": "",
-  "type": "object",
-  "properties": {
-    "toolchain": {
-      "type": "string",
-      "description": "The rustup toolchain channel for projects in this workspace",
-      "$default": "stable"
-    }
-  },
-  "required": []
+	"$schema": "http://json-schema.org/schema",
+	"id": "Cargo",
+	"title": "",
+	"type": "object",
+	"properties": {
+		"toolchain": {
+			"type": "string",
+			"description": "The rustup toolchain channel for projects in this workspace",
+			"$default": "stable"
+		}
+	},
+	"required": []
 }

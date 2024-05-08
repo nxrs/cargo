@@ -1,10 +1,8 @@
 {
-	"name": "cargo-e2e",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "cargo-e2e",
 	"projectType": "application",
-	"sourceRoot": "e2e\\cargo-e2e/src",
-	"tags": [],
-	"implicitDependencies": ["cargo"],
+	"sourceRoot": "e2e/cargo-e2e/src",
 	"targets": {
 		"e2e": {
 			"executor": "@nx/jest:jest",
@@ -17,5 +15,7 @@
 			},
 			"dependsOn": ["cargo:build"]
 		}
-	}
+	},
+	"tags": [],
+	"implicitDependencies": ["cargo"]
 }

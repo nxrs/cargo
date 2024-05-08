@@ -1,35 +1,35 @@
 {
-  "$schema": "http://json-schema.org/schema",
-  "id": "Library",
-  "title": "",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "What name would you like to use?"
-    },
-    "edition": {
-      "type": "number",
-      "description": "What Rust edition to use",
-      "default": 2021
-    },
-    "tags": {
-      "type": "string",
-      "description": "Add tags to the project (used for linting)",
-      "alias": "t"
-    },
-    "directory": {
-      "type": "string",
-      "description": "A directory where the project is placed",
-      "alias": "d"
-    }
-  },
-  "required": [
-    "name"
-  ]
+	"$schema": "http://json-schema.org/schema",
+	"id": "Library",
+	"title": "",
+	"type": "object",
+	"properties": {
+		"name": {
+			"type": "string",
+			"description": "",
+			"$default": {
+				"$source": "argv",
+				"index": 0
+			},
+			"x-prompt": "What name would you like to use?"
+		},
+		"edition": {
+			"type": "number",
+			"description": "What Rust edition to use",
+			"default": 2021
+		},
+		"tags": {
+			"type": "string",
+			"description": "Add tags to the project (used for linting)",
+			"alias": "t"
+		},
+		"directory": {
+			"type": "string",
+			"description": "A directory where the project is placed",
+			"alias": "d"
+		}
+	},
+	"required": [
+		"name"
+	]
 }

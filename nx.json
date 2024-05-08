@@ -1,10 +1,20 @@
 {
-	"workspaceLayout": {
-		"appsDir": "e2e",
-		"libsDir": "packages"
-	},
-	"defaultProject": "cargo",
 	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"defaultBase": "main",
+	"defaultProject": "cargo",
+	"namedInputs": {
+		"default": ["{projectRoot}/**/*", "sharedGlobals"],
+		"sharedGlobals": [],
+		"production": [
+			"default",
+			"!{projectRoot}/.eslintrc.json",
+			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/jest.config.[jt]s",
+			"!{projectRoot}/src/test-setup.[jt]s"
+		]
+	},
+	"parallel": 1,
 	"targetDefaults": {
 		"build": {
 			"dependsOn": ["^build"],
@@ -29,20 +39,10 @@
 			"cache": true
 		}
 	},
-	"namedInputs": {
-		"default": ["{projectRoot}/**/*", "sharedGlobals"],
-		"sharedGlobals": [],
-		"production": [
-			"default",
-			"!{projectRoot}/.eslintrc.json",
-			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-			"!{projectRoot}/tsconfig.spec.json",
-			"!{projectRoot}/jest.config.[jt]s",
-			"!{projectRoot}/src/test-setup.[jt]s"
-		]
-	},
 	"useDaemonProcess": false,
-	"parallel": 1,
 	"useInferencePlugins": false,
-	"defaultBase": "main"
+	"workspaceLayout": {
+		"appsDir": "e2e",
+		"libsDir": "packages"
+	}
 }

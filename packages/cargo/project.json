@@ -1,8 +1,8 @@
 {
-	"name": "cargo",
 	"$schema": "../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "packages/cargo/src",
+	"name": "cargo",
 	"projectType": "library",
+	"sourceRoot": "packages/cargo/src",
 	"tags": [],
 	"targets": {
 		"lint": {
