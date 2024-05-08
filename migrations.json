@@ -1,76 +1,64 @@
 {
   "migrations": [
     {
-      "version": "13.0.0-beta.1",
-      "description": "Add default base to nx.json if its not currently set",
-      "factory": "./src/migrations/update-13-0-0/set-default-base-if-not-set",
       "cli": "nx",
-      "package": "@nrwl/workspace",
-      "name": "set-default-base-if-not-set"
-    },
-    {
-      "version": "13.0.0-beta.4",
-      "description": "Move global settings into nx.json, and project specific settings into workspace.json",
-      "cli": "nx",
-      "implementation": "./src/migrations/update-13-0-0/config-locations/config-locations",
-      "package": "@nrwl/workspace",
-      "name": "13-0-0-config-locations"
-    },
-    {
-      "version": "13.2.0",
-      "description": "Set --parallel=1 for existing repos to preserve the existing behavior",
-      "cli": "nx",
-      "implementation": "./src/migrations/update-13-2-0/set-parallel-default",
-      "package": "@nrwl/workspace",
-      "name": "set-parallel-default"
-    },
-    {
-      "version": "13.3.0-beta.0",
-      "description": "@nrwl/workspace:tsc is now @nrwl/js:tsc",
-      "cli": "nx",
-      "implementation": "./src/migrations/update-13-3-0/update-tsc-executor-location",
-      "package": "@nrwl/workspace",
-      "name": "13-3-0-tsc-location"
-    },
-    {
-      "version": "13.1.2-beta.0",
-      "cli": "nx",
-      "description": "Support .test. file names in tsconfigs",
-      "factory": "./src/migrations/update-13-1-2/update-tsconfigs-for-tests",
-      "package": "@nrwl/jest",
-      "name": "update-ts-config-for-test-filenames"
+      "version": "17.3.0-beta.6",
+      "description": "Updates the nx wrapper.",
+      "implementation": "./src/migrations/update-17-3-0/update-nxw",
+      "package": "nx",
+      "name": "17.3.0-update-nx-wrapper"
     },
     {
       "cli": "nx",
-      "version": "12.9.0-beta.0",
-      "description": "Add outputs for caching",
-      "factory": "./src/migrations/update-12-9-0/add-outputs",
-      "package": "@nrwl/linter",
-      "name": "add-outputs"
+      "version": "18.0.0-beta.2",
+      "description": "Updates nx.json to disabled adding plugins when generating projects in an existing Nx workspace",
+      "implementation": "./src/migrations/update-18-0-0/disable-crystal-for-existing-workspaces",
+      "x-repair-skip": true,
+      "package": "nx",
+      "name": "18.0.0-disable-adding-plugins-for-existing-workspaces"
+    },
+    {
+      "version": "18.1.0-beta.3",
+      "description": "Moves affected.defaultBase to defaultBase in `nx.json`",
+      "implementation": "./src/migrations/update-17-2-0/move-default-base",
+      "package": "nx",
+      "name": "move-default-base-to-nx-json-root"
     },
     {
       "cli": "nx",
-      "version": "12.9.0-beta.0",
-      "description": "Remove ESLint parserOptions.project config if no rules requiring type-checking are in use",
-      "factory": "./src/migrations/update-12-4-0/remove-eslint-project-config-if-no-type-checking-rules",
-      "package": "@nrwl/linter",
-      "name": "remove-eslint-project-config-if-no-type-checking-rules-again"
+      "version": "17.2.6-beta.1",
+      "description": "Rename workspace rules from @nx/workspace/name to @nx/workspace-name",
+      "implementation": "./src/migrations/update-17-2-6-rename-workspace-rules/rename-workspace-rules",
+      "package": "@nx/eslint-plugin",
+      "name": "update-17-2-6-rename-workspace-rules"
     },
     {
-      "cli": "nx",
-      "version": "13.3.0-beta.0",
-      "description": "Update eslint-rules jest.config.js in order to support ESLint v8 exports mapping, remove category field",
-      "factory": "./src/migrations/update-13-3-0/eslint-8-updates",
-      "package": "@nrwl/linter",
-      "name": "eslint-8-updates"
+      "version": "17.1.0-beta.1",
+      "description": "Updates for @typescript-utils/utils v6.9.1+",
+      "implementation": "./src/migrations/update-17-1-0/update-typescript-eslint",
+      "package": "@nx/eslint",
+      "name": "update-typescript-eslint"
     },
     {
-      "cli": "nx",
-      "version": "13.0.0-beta.1",
-      "description": "Remove packages installed by Nx 12's `@nrwl/node:webpack5` generator.",
-      "factory": "./src/migrations/update-13-0-0/remove-webpack-5-packages-13-0-0",
-      "package": "@nrwl/node",
-      "name": "remove-webpack-5-packages"
+      "version": "17.2.0-beta.0",
+      "description": "Simplify eslintFilePatterns",
+      "implementation": "./src/migrations/update-17-2-0/simplify-eslint-patterns",
+      "package": "@nx/eslint",
+      "name": "simplify-eslint-patterns"
+    },
+    {
+      "version": "17.2.9",
+      "description": "Move executor options to target defaults",
+      "implementation": "./src/migrations/update-17-2-9/move-options-to-target-defaults",
+      "package": "@nx/eslint",
+      "name": "move-options-to-target-defaults"
+    },
+    {
+      "version": "17.1.0-beta.2",
+      "description": "Move jest executor options to nx.json targetDefaults",
+      "implementation": "./src/migrations/update-17-1-0/move-options-to-target-defaults",
+      "package": "@nx/jest",
+      "name": "move-options-to-target-defaults"
     }
   ]
 }

@@ -1,6 +1,5 @@
 {
 	"$schema": "http://json-schema.org/schema",
-	"cli": "nx",
 	"id": "Binary",
 	"title": "",
 	"type": "object",
@@ -30,5 +29,7 @@
 			"alias": "d"
 		}
 	},
-	"required": ["name"]
+	"required": [
+		"name"
+	]
 }

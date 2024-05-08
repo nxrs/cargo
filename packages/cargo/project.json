@@ -1,25 +1,23 @@
 {
-	"root": "packages/cargo",
-	"sourceRoot": "packages/cargo/src",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "cargo",
 	"projectType": "library",
+	"sourceRoot": "packages/cargo/src",
+	"tags": [],
 	"targets": {
 		"lint": {
-			"executor": "@nrwl/linter:eslint",
-			"options": {
-				"lintFilePatterns": ["packages/cargo/**/*.ts"]
-			},
+			"executor": "@nx/eslint:lint",
 			"outputs": ["{options.outputFile}"]
 		},
 		"test": {
-			"executor": "@nrwl/jest:jest",
-			"outputs": ["coverage/packages/cargo"],
+			"executor": "@nx/jest:jest",
+			"outputs": ["{workspaceRoot}/coverage/packages/cargo"],
 			"options": {
-				"jestConfig": "packages/cargo/jest.config.js",
-				"passWithNoTests": true
+				"jestConfig": "packages/cargo/jest.config.ts"
 			}
 		},
 		"build": {
-			"executor": "@nrwl/node:package",
+			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/packages/cargo",
@@ -51,6 +49,5 @@
 				]
 			}
 		}
-	},
-	"tags": []
+	}
 }

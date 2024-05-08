@@ -1,7 +1,0 @@
-{
-	"version": 2,
-	"projects": {
-		"cargo": "packages/cargo",
-		"cargo-e2e": "e2e/cargo-e2e"
-	}
-}

@@ -1,16 +1,19 @@
 {
-	"root": "e2e\\cargo-e2e",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"name": "cargo-e2e",
 	"projectType": "application",
-	"sourceRoot": "e2e\\cargo-e2e/src",
+	"sourceRoot": "e2e/cargo-e2e/src",
 	"targets": {
 		"e2e": {
-			"executor": "@nrwl/nx-plugin:e2e",
+			"executor": "@nx/jest:jest",
 			"options": {
-				"target": "cargo:build",
 				"npmPackageName": "@nxrs/cargo",
 				"pluginOutputPath": "dist/packages/cargo",
-				"jestConfig": "e2e/cargo-e2e/jest.config.js"
-			}
+				"jestConfig": "e2e/cargo-e2e/jest.config.js",
+				"runInBand": true,
+				"passWithNoTests": false
+			},
+			"dependsOn": ["cargo:build"]
 		}
 	},
 	"tags": [],

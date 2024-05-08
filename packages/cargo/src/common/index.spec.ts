@@ -1,5 +1,5 @@
-import { ExecutorContext, Tree } from "@nrwl/devkit";
-import { createTreeWithEmptyWorkspace } from "@nrwl/devkit/testing";
+import { ExecutorContext, Tree } from "@nx/devkit";
+import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
 import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs, Target } from ".";
 
 describe("common utils", () => {
@@ -125,7 +125,6 @@ function mockExecutorContext(command: string): ExecutorContext {
 		root: "C:/test",
 		isVerbose: false,
 		workspace: {
-			npmScope: "@test",
 			projects: {
 				"test-app": {
 					root: "apps/test-app",

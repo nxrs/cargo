@@ -1,5 +1,9 @@
-import * as nrwl from "@nrwl/devkit";
-import { ExecutorContext, Tree } from "@nrwl/devkit";
+import {
+	ExecutorContext,
+	Tree,
+	getWorkspaceLayout,
+	names as nxNames,
+} from "@nx/devkit";
 import * as chalk from "chalk";
 import * as cp from "child_process";
 import { kebabCase } from "lodash";
@@ -55,7 +59,7 @@ export enum Target {
 }
 
 export function cargoNames(name: string): Names {
-	let result = nrwl.names(name) as Names;
+	let result = nxNames(name) as Names;
 	result.snakeName = result.constantName.toLowerCase();
 
 	return result;
@@ -66,7 +70,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	host: Tree,
 	opts: T
 ): T & GeneratorOptions {
-	let layout = nrwl.getWorkspaceLayout(host);
+	let layout = getWorkspaceLayout(host);
 	let names = cargoNames(opts.name);
 	let moduleName = names.snakeName;
 
@@ -85,7 +89,7 @@ export function normalizeGeneratorOptions<T extends GeneratorCLIOptions>(
 	}[projectType];
 
 	let projectDirectory = opts.directory
-		? `${nrwl.names(opts.directory).fileName}/${fileName}`
+		? `${nxNames(opts.directory).fileName}/${fileName}`
 		: fileName;
 
 	let projectRoot = `${rootDir}/${projectDirectory}`;
@@ -158,7 +162,12 @@ export function parseCargoArgs<T extends CargoOptions>(
 
 	let packageName = (opts["package"] as undefined | string) ?? ctx.projectName;
 	if ("package" in opts)
-			delete opts["package"];
+		delete opts["package"];
+
+	let projects = ctx.projectsConfigurations?.projects ?? ctx.workspace?.projects;
+	if (!projects) {
+		throw new Error("Failed to find projects map from executor context");
+	}
 
 	if (opts.bin) {
 		processArg(
@@ -168,7 +177,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 		);
 	} else if (
 		target === Target.Build
-		&& ctx.workspace.projects[ctx.projectName].projectType === "application"
+		&& projects[ctx.projectName].projectType === "application"
 	) {
 		args.push("--bin", packageName);
 	} else {
@@ -176,7 +185,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 	}
 
 	if (opts.features) {
-		const argsToAdd = opts.features === "all"
+		let argsToAdd = opts.features === "all"
 			? ["--all-features"]
 			: ["--features", opts.features];
 
@@ -198,7 +207,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 				console.log(
 					`${label} Conflicting options found: "release" and "profile" `
 						+ `-- "profile" will be overridden`
-				)
+				);
 				delete opts["profile"];
 			}
 		}

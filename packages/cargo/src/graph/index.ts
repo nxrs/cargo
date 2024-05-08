@@ -1,10 +1,9 @@
 import {
 	ProjectConfiguration,
-	ProjectGraph,
-	ProjectGraphBuilder,
-	ProjectGraphProcessorContext as Context,
-	ProjectGraphProjectNode as ProjectNode,
-} from "@nrwl/devkit";
+	CreateDependenciesContext as Context,
+	RawProjectGraphDependency as GraphDependency,
+	DependencyType,
+} from "@nx/devkit";
 import * as cp from "child_process";
 import * as os from "os";
 import * as path from "path";
@@ -61,7 +60,7 @@ interface CargoMetadata {
 	resolve: {
 		nodes: ResolveNode[];
 		root: unknown;
-	}
+	};
 	target_directory: string;
 	version: number;
 	workspace_root: string;
@@ -73,15 +72,12 @@ interface ResolveNode {
 	dependencies: CargoId[];
 }
 
-export function processProjectGraph(graph: ProjectGraph, ctx: Context): ProjectGraph {
+export function createDependencies<T = unknown>(_: T, ctx: Context): GraphDependency[] {
 	let {
 		packages,
 		workspace_members: cargoWsMembers,
 		resolve: cargoResolve,
-		workspace_root: wsRoot,
 	} = getCargoMetadata();
-
-	let builder = new ProjectGraphBuilder(graph);
 
 	let workspacePackages = new Map<CargoId, CargoPackage>();
 	for (let id of cargoWsMembers) {
@@ -91,30 +87,31 @@ export function processProjectGraph(graph: ProjectGraph, ctx: Context): ProjectG
 		}
 	}
 
-	let nxData = mapCargoProjects(ctx, graph, wsRoot, workspacePackages);
-	for (let { id: sourceId, dependencies } of cargoResolve.nodes) {
-		if (nxData.has(sourceId)) {
+	let nxData = mapCargoProjects(ctx, workspacePackages);
+
+	return cargoResolve
+		.nodes
+		.filter(({ id }) => nxData.has(id))
+		.flatMap<GraphDependency>(({ id: sourceId, dependencies }) => {
 			let sourceProject = nxData.get(sourceId)!;
-			let graphDependencies = graph.dependencies[sourceProject.name];
+			let cargoPackage = workspacePackages.get(sourceId)!;
+			let sourceManifest = path
+				.relative(ctx.workspaceRoot, cargoPackage.manifest_path)
+				.replace(/\\/g, "/");
 
-			if (graphDependencies) {
-				for (let dependency of graphDependencies) {
-					if (!sourceProject.config.implicitDependencies?.includes(dependency.target)) {
-						builder.removeDependency(sourceProject.name, dependency.target);
-					}
-				}
-			}
-
-			for (let depId of dependencies) {
-				if (nxData.has(depId)) {
+			return dependencies
+				.filter(depId => nxData.has(depId))
+				.map(depId => {
 					let targetProject = nxData.get(depId)!;
-					builder.addImplicitDependency(sourceProject.name, targetProject.name);
-				}
-			}
-		}
-	}
 
-	return builder.getUpdatedProjectGraph();
+					return {
+						source: sourceProject.name,
+						target: targetProject.name,
+						type: DependencyType.static,
+						sourceFile: sourceManifest,
+					}
+				})
+		});
 }
 
 function getCargoMetadata(): CargoMetadata {
@@ -127,19 +124,13 @@ function getCargoMetadata(): CargoMetadata {
 	return JSON.parse(metadata);
 }
 
-interface NxProjectData {
-	name: string;
-	config: ProjectConfiguration;
-	graphNode?: ProjectNode<{ [key: string]: unknown }>;
-}
+type WithReq<T, K extends keyof T>
+	= Omit<T, K>
+	& { [Key in K]-?: Exclude<T[Key], null|undefined> }
 
-function mapCargoProjects(
-	ctx: Context,
-	graph: ProjectGraph,
-	wsRoot: string,
-	packages: Map<CargoId, CargoPackage>,
-) {
-	let result = new Map<CargoId, NxProjectData>();
+function mapCargoProjects(ctx: Context, packages: Map<CargoId, CargoPackage>) {
+	let result = new Map<CargoId, WithReq<ProjectConfiguration, "name">>();
+
 	for (let [cargoId, cargoPackage] of packages) {
 		if (!cargoPackage.manifest_path) {
 			throw new Error("Expected cargo package's `manifest_path` to exist");
@@ -147,33 +138,22 @@ function mapCargoProjects(
 
 		let manifestDir = path.dirname(cargoPackage.manifest_path);
 		let projectDir = path
-			.relative(wsRoot, manifestDir)
+			.relative(ctx.workspaceRoot, manifestDir)
 			.replace(/\\/g, "/");
 
 		let found = Object
-			.entries(ctx.workspace.projects)
+			.entries(ctx.projects)
 			.find(([, config]) => config.root === projectDir);
 
 		if (found) {
 			let [projectName, projectConfig] = found;
-			let projectNode = graph.nodes[projectName];
-
-			assert(projectNode?.type !== "npm");
 
 			result.set(cargoId, {
+				...projectConfig,
 				name: projectName,
-				config: projectConfig,
-				graphNode: projectNode,
 			});
 		}
 	}
 
 	return result;
-}
-
-function assert(expression: unknown, message?: string): asserts expression {
-	if (!expression) {
-		if (message) throw new Error(`Assertion failed: ${message}`);
-		else throw new Error("Assertion failed");
-	}
 }
