@@ -1,6 +1,13 @@
 import { ExecutorContext, Tree } from "@nx/devkit";
 import { createTreeWithEmptyWorkspace } from "@nx/devkit/testing";
-import { CargoOptions, normalizeGeneratorOptions, parseCargoArgs, Target } from ".";
+
+import ClippyCliOptions from "../executors/clippy/schema";
+import {
+	CargoOptions,
+	normalizeGeneratorOptions,
+	parseCargoArgs,
+	Target,
+} from "./index";
 
 describe("common utils", () => {
 	describe("parseCargoArgs", () => {
@@ -33,7 +40,9 @@ describe("common utils", () => {
 			expect(args.join(" ")).toEqual("cargo run -p foo");
 
 			args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)];
-			expect(args.join(" ")).toEqual("cargo clippy -p foo");
+			expect(args.join(" ")).toEqual(
+				"cargo clippy -p foo -- -D warnings --no-deps"
+			);
 		});
 
 		it("should ignore the Nx-config-specified target name", () => {
@@ -84,6 +93,23 @@ describe("common utils", () => {
 
 			expect(args.join(" ")).toEqual(
 				"cargo build -p test-app --bin custom-bin-name",
+			);
+		});
+
+		it("correctly handles pass-through arguments for clippy", () => {
+			let ctx = mockExecutorContext("test-app:lint");
+			let opts: ClippyCliOptions = {
+				package: "test-app-pkg",
+				target: "wasm32-unknown-unknown",
+				fix: false,
+				failOnWarnings: true,
+				noDeps: true,
+			};
+			let args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)];
+
+			expect(args.join(" ")).toEqual(
+				"cargo clippy -p test-app-pkg --target wasm32-unknown-unknown "
+					+ "-- -D warnings --no-deps",
 			);
 		});
 	});

@@ -16,6 +16,8 @@ import {
 	OutputOptions,
 } from "./schema";
 
+import ClippyCliOptions from "../executors/clippy/schema";
+
 export interface GeneratorOptions {
 	projectName: string;
 	moduleName: string;
@@ -160,6 +162,10 @@ export function parseCargoArgs<T extends CargoOptions>(
 		throw new Error("Expected project name to be non-null");
 	}
 
+	let passThroughArgs = target === Target.Clippy
+		? parseClippyArgs(opts)
+		: null;
+
 	let packageName = (opts["package"] as undefined | string) ?? ctx.projectName;
 	if ("package" in opts)
 		delete opts["package"];
@@ -262,10 +268,35 @@ export function parseCargoArgs<T extends CargoOptions>(
 	// For the sake of future-proofing in the absence of updates to this plugin,
 	// pass any remaining options straight through to `cargo`
 	for (let [key, value] of Object.entries(opts)) {
-		args.push(`--${kebabCase(key)}`);
+		if (value !== false) {
+			args.push(`--${kebabCase(key)}`);
 
-		if (value !== true)
-			args.push(String(value));
+			if (value !== true)
+				args.push(String(value));
+		}
+	}
+
+	if (passThroughArgs) {
+		args.push("--", ...passThroughArgs);
+	}
+
+	return args;
+}
+
+function parseClippyArgs(opts: ClippyCliOptions): string[] {
+	let args = [];
+
+	if (opts.failOnWarnings || opts.failOnWarnings == null) {
+		delete opts.failOnWarnings;
+		args.push("-D", "warnings");
+	}
+	if (opts.noDeps || opts.noDeps == null) {
+		delete opts.noDeps;
+		args.push("--no-deps");
+	}
+	if (opts.fix) {
+		delete opts.fix;
+		args.push("--fix");
 	}
 
 	return args;
