@@ -1,6 +1,6 @@
 {
 	"name": "@nxrs/cargo",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"license": "MIT",
 	"main": "src/index.js",
 	"generators": "./generators.json",
@@ -18,6 +18,6 @@
 		"chalk": "^4.1.2"
 	},
 	"peerDependencies": {
-		"@nx/devkit": ">= 12.7.0"
+		"@nx/devkit": ">= 17"
 	}
 }
