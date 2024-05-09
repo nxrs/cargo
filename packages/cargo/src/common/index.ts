@@ -148,7 +148,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 	target: Target,
 	options: T,
 	ctx: ExecutorContext,
-): [string[], Record<string, string>?] {
+): [string[], Record<string, string|undefined>?] {
 	let opts = { ...options };
 	let args = [] as string[];
 
@@ -309,9 +309,13 @@ function parseClippyArgs(opts: ClippyCliOptions): string[] {
 	return args;
 }
 
-function extractEnv(opts: CargoOptions): Record<string, string> | undefined {
+function extractEnv(opts: CargoOptions): Record<string, string|undefined> | undefined {
 	if ("env" in opts && opts.env != null) {
-		const env = { ...opts.env };
+		const env = {
+			...process.env,
+			...opts.env,
+		};
+
 		delete opts.env;
 
 		return env;
@@ -328,7 +332,11 @@ function processArg(
 	delete opts[key];
 }
 
-export function runCargo(args: string[], ctx: ExecutorContext, env?: Record<string, string>) {
+export function runCargo(
+	args: string[],
+	ctx: ExecutorContext,
+	env?: Record<string, string|undefined>,
+) {
 	console.log(chalk.dim`> cargo ${
 		args.map(arg => / /.test(arg) ? `"${arg}"` : arg)
 			.join(" ")
