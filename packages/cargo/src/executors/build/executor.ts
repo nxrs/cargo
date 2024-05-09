@@ -5,11 +5,11 @@ import CLIOptions from "./schema";
 
 export default async function (opts: CLIOptions, ctx: ExecutorContext) {
 	try {
-		let args = opts.run
+		let [args, env] = opts.run
 			? parseCargoArgs(Target.Run, opts, ctx)
 			: parseCargoArgs(Target.Build, opts, ctx);
 
-		await runCargo(args, ctx);
+		await runCargo(args, ctx, env);
 
 		return { success: true };
 	} catch (err) {

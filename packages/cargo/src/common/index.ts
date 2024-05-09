@@ -11,6 +11,7 @@ import { kebabCase } from "lodash";
 import {
 	CompilationOptions,
 	DisplayOptions,
+	EnvironmentOptions,
 	FeatureSelection,
 	ManifestOptions,
 	OutputOptions,
@@ -34,6 +35,7 @@ export type CargoOptions = Partial<
 	& OutputOptions
 	& DisplayOptions
 	& ManifestOptions
+	& EnvironmentOptions
 	& { [key: string]: unknown }
 >;
 
@@ -139,13 +141,18 @@ export function updateWorkspaceMembers(host: Tree, opts: GeneratorOptions) {
 	host.write("Cargo.toml", updated);
 }
 
+/**
+ * @returns a tuple of `[args, env?]`
+ */
 export function parseCargoArgs<T extends CargoOptions>(
 	target: Target,
 	options: T,
 	ctx: ExecutorContext,
-): string[] {
+): [string[], Record<string, string>?] {
 	let opts = { ...options };
 	let args = [] as string[];
+
+	const env = extractEnv(opts);
 
 	if (opts.toolchain)
 		processArg(args, opts, "toolchain", `+${opts.toolchain}`);
@@ -280,7 +287,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 		args.push("--", ...passThroughArgs);
 	}
 
-	return args;
+	return [args, env];
 }
 
 function parseClippyArgs(opts: ClippyCliOptions): string[] {
@@ -302,6 +309,15 @@ function parseClippyArgs(opts: ClippyCliOptions): string[] {
 	return args;
 }
 
+function extractEnv(opts: CargoOptions): Record<string, string> | undefined {
+	if ("env" in opts && opts.env != null) {
+		const env = { ...opts.env };
+		delete opts.env;
+
+		return env;
+	}
+}
+
 function processArg(
 	args: string[],
 	opts: CargoOptions,
@@ -312,7 +328,7 @@ function processArg(
 	delete opts[key];
 }
 
-export function runCargo(args: string[], ctx: ExecutorContext) {
+export function runCargo(args: string[], ctx: ExecutorContext, env?: Record<string, string>) {
 	console.log(chalk.dim`> cargo ${
 		args.map(arg => / /.test(arg) ? `"${arg}"` : arg)
 			.join(" ")
@@ -323,6 +339,7 @@ export function runCargo(args: string[], ctx: ExecutorContext) {
 			cwd: ctx.root,
 			shell: true,
 			stdio: "inherit",
+			env,
 		})
 			.on("error", reject)
 			.on("close", code => {

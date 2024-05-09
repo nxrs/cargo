@@ -16,7 +16,7 @@ describe("common utils", () => {
 			let opts: CargoOptions = {
 				target: "86_64-pc-windows-gnu",
 			};
-			let args = parseCargoArgs(Target.Build, opts, ctx);
+			let [args] = parseCargoArgs(Target.Build, opts, ctx);
 			args.unshift("cargo");
 
 			expect(args.join(" ")).toEqual(
@@ -30,16 +30,16 @@ describe("common utils", () => {
 				package: "foo",
 			};
 
-			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)[0]];
 			expect(args.join(" ")).toEqual("cargo build --bin foo");
 
-			args = ["cargo", ...parseCargoArgs(Target.Test, opts, ctx)];
+			args = ["cargo", ...parseCargoArgs(Target.Test, opts, ctx)[0]];
 			expect(args.join(" ")).toEqual("cargo test -p foo");
 
-			args = ["cargo", ...parseCargoArgs(Target.Run, opts, ctx)];
+			args = ["cargo", ...parseCargoArgs(Target.Run, opts, ctx)[0]];
 			expect(args.join(" ")).toEqual("cargo run -p foo");
 
-			args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)];
+			args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)[0]];
 			expect(args.join(" ")).toEqual(
 				"cargo clippy -p foo -- -D warnings --no-deps"
 			);
@@ -48,7 +48,7 @@ describe("common utils", () => {
 		it("should ignore the Nx-config-specified target name", () => {
 			let ctx = mockExecutorContext("test-app:flooptydoopty");
 			let opts: CargoOptions = {};
-			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)[0]];
 
 			expect(args.join(" ")).toEqual("cargo build --bin test-app");
 		});
@@ -56,10 +56,10 @@ describe("common utils", () => {
 		it("should correctly handle `release` option", () => {
 			let ctx = mockExecutorContext("test-app:build");
 
-			let args = ["cargo", ...parseCargoArgs(Target.Build, { release: false }, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Build, { release: false }, ctx)[0]];
 			expect(args.join(" ")).toEqual("cargo build --bin test-app");
 
-			args = ["cargo", ...parseCargoArgs(Target.Build, { release: true }, ctx)];
+			args = ["cargo", ...parseCargoArgs(Target.Build, { release: true }, ctx)[0]];
 			expect(args.join(" ")).toEqual("cargo build --bin test-app --profile release");
 		});
 
@@ -69,14 +69,14 @@ describe("common utils", () => {
 			let opts: CargoOptions & { [key: string]: string } = {
 				profile: "dev-custom",
 			};
-			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)[0]];
 
 			expect(args.join(" ")).toEqual(
 				"cargo build --bin test-app --profile dev-custom",
 			);
 
 			opts = { unknownArg: "lorem-ipsum" };
-			args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)[0]];
 
 			expect(args.join(" ")).toEqual(
 				"cargo build --bin test-app --unknown-arg lorem-ipsum",
@@ -89,7 +89,7 @@ describe("common utils", () => {
 			let opts: CargoOptions = {
 				bin: "custom-bin-name",
 			};
-			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Build, opts, ctx)[0]];
 
 			expect(args.join(" ")).toEqual(
 				"cargo build -p test-app --bin custom-bin-name",
@@ -105,12 +105,26 @@ describe("common utils", () => {
 				failOnWarnings: true,
 				noDeps: true,
 			};
-			let args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)];
+			let args = ["cargo", ...parseCargoArgs(Target.Clippy, opts, ctx)[0]];
 
 			expect(args.join(" ")).toEqual(
 				"cargo clippy -p test-app-pkg --target wasm32-unknown-unknown "
 					+ "-- -D warnings --no-deps",
 			);
+		});
+
+		it("correctly handles the `env` option", () => {
+			let ctx = mockExecutorContext("test-app:run");
+			let opts: CargoOptions = {
+				package: "foo",
+				env: {
+					RUST_BACKTRACE: "FULL",
+				},
+			};
+			let [args, env] = parseCargoArgs(Target.Run, opts, ctx);
+
+			expect(["cargo", ...args].join(" ")).toEqual("cargo run -p foo");
+			expect(env).toEqual({ RUST_BACKTRACE: "FULL" });
 		});
 	});
 

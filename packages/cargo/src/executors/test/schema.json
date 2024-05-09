@@ -6,6 +6,10 @@
 	"description": "",
 	"type": "object",
 	"properties": {
+		"package": {
+			"type": "string",
+			"description": "Specify the Cargo package, if different from the Nx project name."
+		},
 		"features": {
 			"type": "string",
 			"description": "Space or comma separated list of features to activate, or \"all\"."
@@ -59,6 +63,10 @@
 		"toolchain": {
 			"type": "string",
 			"description": "See the [rustup documentation](https://rust-lang.github.io/rustup/overrides.html) for more information about how toolchain overrides work."
+		},
+		"env": {
+			"type": "object",
+			"description": "Specify environment variables to set while running the Cargo command."
 		}
 	},
 	"required": []

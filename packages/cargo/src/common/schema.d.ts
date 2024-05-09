@@ -1,3 +1,8 @@
+export interface PackageSelection {
+	/** Specify the Cargo package, if different from the Nx project name. */
+	package?: string;
+}
+
 export interface FeatureSelection {
 	/** Space or comma separated list of features to activate, or "all". */
 	features?: string;
@@ -96,4 +101,11 @@ export interface ManifestOptions {
 	 * possible.
 	 */
 	offline?: boolean;
+}
+
+export interface EnvironmentOptions {
+	/**
+	 * Specify environment variables to set while running the Cargo command.
+	 */
+	env?: Record<string, string>;
 }
