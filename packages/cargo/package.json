@@ -1,6 +1,6 @@
 {
 	"name": "@nxrs/cargo",
-	"version": "0.5.1",
+	"version": "0.6.0",
 	"license": "MIT",
 	"main": "src/index.js",
 	"generators": "./generators.json",
