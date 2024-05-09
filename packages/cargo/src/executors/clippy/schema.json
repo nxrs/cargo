@@ -19,6 +19,10 @@
 			"type": "boolean",
 			"description": "By default, Clippy will run on the selected project **and** any dependencies that are members of the workspace. To run Clippy **only** on this project, use this flag.",
 			"default": true
+		},
+		"env": {
+			"type": "object",
+			"description": "Specify environment variables to set while running the Cargo command."
 		}
 	},
 	"required": []

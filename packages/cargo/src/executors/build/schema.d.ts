@@ -4,15 +4,19 @@ import {
 	FeatureSelection,
 	OutputOptions,
 	ManifestOptions,
+	PackageSelection,
+	EnvironmentOptions,
 } from "../../common/schema";
 
 // prettier-ignore
 type Options =
+	& PackageSelection
 	& FeatureSelection
 	& CompilationOptions
 	& OutputOptions
 	& DisplayOptions
 	& ManifestOptions
+	& EnvironmentOptions
 	& { [key: string]: unknown }
 & {
 	/**

@@ -1,15 +1,19 @@
 import {
 	CompilationOptions,
 	DisplayOptions,
+	EnvironmentOptions,
 	FeatureSelection,
 	ManifestOptions,
+	PackageSelection,
 } from "../../common/schema";
 
 type Options =
+	& PackageSelection
 	& FeatureSelection
 	& CompilationOptions
 	& DisplayOptions
 	& ManifestOptions
+	& EnvironmentOptions
 	& { [key: string]: unknown }
 & {
 	/** Automatically fix code where possible. */
