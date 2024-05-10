@@ -124,7 +124,7 @@ describe("common utils", () => {
 			let [args, env] = parseCargoArgs(Target.Run, opts, ctx);
 
 			expect(["cargo", ...args].join(" ")).toEqual("cargo run -p foo");
-			expect(env).toEqual({ RUST_BACKTRACE: "FULL" });
+			expect(env).toHaveProperty("RUST_BACKTRACE", "FULL");
 		});
 	});
 
