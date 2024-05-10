@@ -152,7 +152,7 @@ export function parseCargoArgs<T extends CargoOptions>(
 	let opts = { ...options };
 	let args = [] as string[];
 
-	const env = extractEnv(opts);
+	let env = extractEnv(opts);
 
 	if (opts.toolchain)
 		processArg(args, opts, "toolchain", `+${opts.toolchain}`);
@@ -311,7 +311,7 @@ function parseClippyArgs(opts: ClippyCliOptions): string[] {
 
 function extractEnv(opts: CargoOptions): Record<string, string|undefined> | undefined {
 	if ("env" in opts && opts.env != null) {
-		const env = {
+		let env = {
 			...process.env,
 			...opts.env,
 		};
